@@ -1,11 +1,11 @@
-id,text,language,perspective,situation_labels,urgency,legal_refs,source,annotator,split
-fictional-001,"A fictional character is followed repeatedly on her way home and feels unsafe.",en,first,stalking,urgent,,team_authored,team,train
-fictional-002,"मेरी कहानी पूरी तरह काल्पनिक है; पड़ोसी मुझे रोज़ परेशान करने की धमकी देता है।",hi,first,street_harassment,urgent,,team_authored,team,train
-fictional-003,"In this fictional example, a colleague sends unwanted messages at work.",en,first,workplace_harassment,non_urgent,,team_authored,team,val
-fictional-004,"Kalpanik kahani mein ek ladki ko online fake account se pareshaan kiya ja raha hai.",hinglish,third,cyber_abuse,urgent,,team_authored,team,train
-fictional-005,"यह एक काल्पनिक उदाहरण है जिसमें बहन घरेलू तनाव के बारे में जानकारी चाहती है।",hi,third,domestic_violence,info_seeking,,team_authored,team,test
-fictional-006,"A fictional person asks how to document repeated insulting comments in public.",en,third,street_harassment,immediate_danger,,team_authored,team,train
-fictional-007,"Meri fictional dost ko shaadi ke kharchon ke liye pressure diya ja raha hai.",hinglish,third,dowry_harassment,urgent,,team_authored,team,train
-fictional-008,"काल्पनिक स्थिति में महिला को घर से बाहर निकलने से रोकने की कोशिश होती है।",hi,first,domestic_violence,immediate_danger,,team_authored,team,train
-fictional-009,"This fictional workplace scenario involves two concerns: unwanted comments and threatening emails.",en,first,workplace_harassment|cyber_abuse,urgent,,team_authored,team,val
-fictional-010,"Ek fictional example mein koi vyakti sirf kanooni jaankari pooch raha hai.",hinglish,third,other,immediate_danger,,team_authored,team,test
+id,text,language,perspective,situation_labels,urgency,legal_refs,source,annotator,split,group_id
+fictional-001,"A fictional character is followed repeatedly on her way home and feels unsafe.",en,first,stalking,urgent,,team_authored,team,train,fictional-001
+fictional-002,"मेरी कहानी पूरी तरह काल्पनिक है; पड़ोसी मुझे रोज़ परेशान करने की धमकी देता है।",hi,first,street_harassment,urgent,,team_authored,team,train,fictional-002
+fictional-003,"In this fictional example, a colleague sends unwanted messages at work.",en,first,workplace_harassment,non_urgent,,team_authored,team,val,fictional-003
+fictional-004,"Kalpanik kahani mein ek ladki ko online fake account se pareshaan kiya ja raha hai.",hinglish,third,cyber_abuse,urgent,,team_authored,team,train,fictional-004
+fictional-005,"यह एक काल्पनिक उदाहरण है जिसमें बहन घरेलू तनाव के बारे में जानकारी चाहती है।",hi,third,domestic_violence,info_seeking,,team_authored,team,test,fictional-005
+fictional-006,"A fictional person asks how to document repeated insulting comments in public.",en,third,street_harassment,immediate_danger,,team_authored,team,train,fictional-006
+fictional-007,"Meri fictional dost ko shaadi ke kharchon ke liye pressure diya ja raha hai.",hinglish,third,dowry_harassment,urgent,,team_authored,team,train,fictional-007
+fictional-008,"काल्पनिक स्थिति में महिला को घर से बाहर निकलने से रोकने की कोशिश होती है।",hi,first,domestic_violence,immediate_danger,,team_authored,team,train,fictional-008
+fictional-009,"This fictional workplace scenario involves two concerns: unwanted comments and threatening emails.",en,first,workplace_harassment|cyber_abuse,urgent,,team_authored,team,val,fictional-009
+fictional-010,"Ek fictional example mein koi vyakti sirf kanooni jaankari pooch raha hai.",hinglish,third,other,immediate_danger,,team_authored,team,test,fictional-010

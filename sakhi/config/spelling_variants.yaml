@@ -1,0 +1,12 @@
+# Editable Roman-script Hindi normalisation map. Keys and values are lowercase.
+variants:
+  kripya: please
+  pls: please
+  plz: please
+  mujhe: mujhe
+  muje: mujhe
+  pareshan: परेशान
+  pareshaan: परेशान
+  preshan: परेशान
+  madad: मदद
+  help: help

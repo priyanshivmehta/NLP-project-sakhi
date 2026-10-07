@@ -1,0 +1,3 @@
+# Use an open-licensed Noto Sans Devanagari font for word clouds.
+# Download: https://fonts.google.com/specimen/Noto+Sans+Devanagari
+font_path: config/fonts/NotoSansDevanagari-Regular.ttf
