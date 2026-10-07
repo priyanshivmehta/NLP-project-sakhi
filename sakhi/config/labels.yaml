@@ -1,0 +1,24 @@
+situation_labels:
+  - street_harassment
+  - stalking
+  - domestic_violence
+  - workplace_harassment
+  - dowry_harassment
+  - cyber_abuse
+  - other
+
+urgency_labels:
+  - immediate_danger
+  - urgent
+  - non_urgent
+  - info_seeking
+
+allowed_languages:
+  - hi
+  - hinglish
+  - en
+
+allowed_perspectives:
+  - first
+  - third
+

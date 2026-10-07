@@ -1,0 +1,23 @@
+# VERIFY EVERY NUMBER AND URL AGAINST OFFICIAL GOVERNMENT SOURCES BEFORE RELEASE
+authorities:
+  police_emergency:
+    name: Police / emergency
+    phone: TODO_VERIFY
+    url: TODO_VERIFY
+  women_helpline:
+    name: Women's helpline
+    phone: TODO_VERIFY
+    url: TODO_VERIFY
+  workplace_internal_committee:
+    name: Workplace Internal Committee
+    phone: TODO_VERIFY
+    url: TODO_VERIFY
+  protection_officer:
+    name: Protection Officer
+    phone: TODO_VERIFY
+    url: TODO_VERIFY
+  cybercrime_portal:
+    name: National cybercrime portal
+    phone: TODO_VERIFY
+    url: TODO_VERIFY
+
