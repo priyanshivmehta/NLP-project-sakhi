@@ -1,7 +1,9 @@
 sakhi/models/
+models/
 sakhi/reports/results/
 sakhi/data/processed/*.csv
 __pycache__/
 *.py[cod]
+*.ttf
 .pytest_cache/
 .venv/
