@@ -53,6 +53,40 @@ Run tests from the repository root with:
 python -m pytest
 ```
 
+## Baseline training and evaluation
+
+The classical baseline is trained with:
+
+```powershell
+python -m sakhi.src.train_baseline
+```
+
+It fits word (1-2 gram) and character (2-5 gram) TF-IDF features on
+`train.csv` only. Urgency uses balanced logistic regression; situation uses
+one-vs-rest balanced logistic regression. Situation thresholds are tuned on
+`val.csv` only and saved with the model artifacts under `sakhi/models/`.
+
+Evaluate validation by default:
+
+```powershell
+python -m sakhi.src.evaluate
+```
+
+Test evaluation requires an explicit one-time flag:
+
+```powershell
+python -m sakhi.src.evaluate --final-test
+```
+
+For a code-path check using only the fictional sample:
+
+```powershell
+python -m sakhi.src.evaluate --smoke
+```
+
+Smoke outputs are labelled **SMOKE TEST, NOT A REAL RESULT** and must not be
+reported as model performance.
+
 ## Data and experiment policy
 
 - The team writes all training scenarios. Do not add real victims' data,
@@ -81,6 +115,9 @@ python -m pytest
   freeze.
 - `data/raw/sample_fictional.csv` is a separate pipeline smoke test only and
   must never be used to create production splits.
+- EDA images generated from `sample_fictional.csv` are smoke-test artifacts,
+  not report results. After the real dataset is frozen, rerun EDA on that
+  frozen dataset and use only those images in reports.
 - Use the fixed random seed defined by the project code and never tune on the
   test split.
 - Report macro-F1 and per-class metrics, prioritising recall for
@@ -112,6 +149,9 @@ python -m pytest
   known limitation for the current fictional-data prototype and must be
   addressed before handling real user messages.
 - Do not publish model outputs as legal conclusions or guarantees.
+- The bundled Noto Sans Devanagari font is from Google Fonts, copyright The
+  Noto Project Authors, and is distributed under the SIL Open Font License
+  1.1; see `sakhi/config/fonts/OFL.txt`.
 
 ## Development status
 

@@ -51,6 +51,11 @@ def test_entity_masking_preserves_emergency_helpline_numbers() -> None:
     assert "[PHONE]" not in result
 
 
+def test_entity_masking_preserves_ordinary_short_numbers() -> None:
+    result = mask_entities("He came at 11 pm. Section 78 applies.")
+    assert result == "He came at 11 pm. Section 78 applies."
+
+
 def test_entity_masking_handles_common_phone_formats() -> None:
     result = mask_entities("+91 98765 43210; 98765-43210; 9876543210")
     assert result.count("[PHONE]") == 3

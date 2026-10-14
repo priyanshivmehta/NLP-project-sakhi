@@ -1,0 +1,7 @@
+sakhi/models/
+sakhi/reports/results/
+sakhi/data/processed/*.csv
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
