@@ -1,0 +1,69 @@
+id,group_id,text,language,perspective,situation_labels,urgency,legal_refs,source,annotator,split
+S-AB-0003,G-0003,What is the process to complain about domestic violence? Do I have to go to the police first? 😟,en,first,domestic_violence,info_seeking,PWDVA-2005,team_written,AB,test
+S-AB-0005,G-0005,pichle hafte meeting me ek client ne meri looks pe personal comment kiya. Dobara nahi hua. Bas options janna chahti hu.,hinglish,first,workplace_harassment,non_urgent,POSH-2013,team_written,AB,test
+S-AB-0007,G-0007,How do I report someone who keeps messaging me after I said no? Is it considered stalking?,en,first,stalking,info_seeking,BNS-78,team_written,AB,test
+S-AB-0027,G-0027,अगर कंपनी में इंटरनल कमेटी ही नहीं है तो सीनियर के खिलाफ शिकायत कहाँ करें?,hi,first,workplace_harassment,info_seeking,POSH-2013,team_written,AB,test
+S-AB-0031,G-0031,someone sent me a rude message on instagram last week from a fake account. i blocked and reported it and nothing since. is this harassment?,en,first,cyber_abuse,non_urgent,IT-66E,team_written,AB,test
+S-AB-0034,G-0034,प्रोटेक्शन ऑफिसर कौन होता है और उससे कैसे मिलें?,hi,first,domestic_violence,info_seeking,PWDVA-2005,team_written,AB,test
+S-AB-0036,G-0036,"pichle hafte instagram pe fake account se ek bura message aaya. maine block aur report kar diya, uske baad kuch nahi hua. kya ab bhi complaint ho sakti hai?",hinglish,first,cyber_abuse,non_urgent,IT-66E,team_written,AB,test
+S-AB-0041,G-0041,"meri friend ne ek ladke ko block kiya tha, usne 2-3 din pehle ek naye account se try kiya. Usne wo bhi block kar diya aur kuch nahi hua Wo bas options jaanna chahti hai.",hinglish,third,stalking|cyber_abuse,non_urgent,BNS-78|IT-66E,team_written,AB,test
+S-AB-0042,G-0042,My friend's husband posted a screenshot of her private chat in the family group yesterday to shame her. He removed it after she objected and nothing since,en,third,domestic_violence|cyber_abuse,non_urgent,PWDVA-2005|IT-66E,team_written,AB,test
+S-AB-0045,G-0045,मेरे पति ने मुझे कमरे में बंद कर दिया है और कह रहे हैं कि आज रात मुझे नुकसान पहुँचाएँगे। मेरे पास बस फ़ोन है। 😢,hi,first,domestic_violence,immediate_danger,PWDVA-2005|BNS-351,team_written,AB,test
+S-AB-0049,G-0049,सास कह रही हैं कि आज पैसे नहीं आए तो मुझे चोट पहुँचाएँगी। वो अभी मेरे कमरे के बाहर खड़ी हैं।,hi,first,dowry_harassment,immediate_danger,DPA-1961|BNS-85,team_written,AB,test
+S-AB-0068,G-0068,Agar koi mana karne ke baad bhi message karta rahe to complaint kaise karte hain? Kya ye stalking hai?,hinglish,first,stalking,info_seeking,BNS-78,team_written,AB,test
+S-AB-0069,G-0069,"my in-laws keep asking my parents for more money and a bike, and taunt me about it daily, for months.",en,first,dowry_harassment,urgent,DPA-1961|BNS-85,team_written,AB,test
+S-AB-0074,G-0074,"Men outside the coaching centre keep staring and making kissing sounds when I walk by, for months now. I am scared it will get worse pleaseee",en,first,street_harassment,urgent,BNS-79,team_written,AB,test
+S-AB-0075,G-0075,अगर कोई मेरी प्राइवेट फ़ोटो शेयर करने की धमकी दे तो पहले क्या करना चाहिए? चैट डिलीट कर दूँ,hi,first,cyber_abuse,info_seeking,IT-66E,team_written,AB,test
+S-AB-0084,G-0084,"पति मेरी सारी चैट पढ़ते हैं, सिम ले ली और कहते हैं मम्मी-पापा से बात की तो रिश्तेदारों को मेरी फ़ोटो भेज देंगे, तीन हफ़्ते से। डर है कि और बढ़ जाएगा",hi,first,domestic_violence|cyber_abuse,urgent,PWDVA-2005|IT-66E|BNS-351,team_written,AB,test
+S-AB-0086,G-0086,"My sister's in-laws demand money from her parents every few days and say bad things to her, for months. She does not know who to approach.",en,third,dowry_harassment,urgent,DPA-1961|BNS-85,team_written,AB,test
+S-AB-0099,G-0099,My sister's colleague made a joke about her body in the pantry a few days ago. She says it was a one-time thing. Is this considered harassment?,en,third,workplace_harassment,non_urgent,POSH-2013,team_written,AB,test
+S-AB-0103,G-0103,my husband has locked me in the room and is saying he will hurt me tonight. i only have my phone.,en,first,domestic_violence,immediate_danger,PWDVA-2005|BNS-351,team_written,AB,test
+S-AB-0107,G-0107,A guy I rejected texted me again last week after a long gap. Just one message and I did not reply. I just want to know what my options are.,en,first,stalking,non_urgent,BNS-78,team_written,AB,test
+S-AB-0115,G-0115,"meri behen ka manager roz raat ko usko personal messages bhejta hai aur mana karne pe promotion rokne ki dhamki deta hai, pichle mahine se.",hinglish,third,workplace_harassment,urgent,POSH-2013,team_written,AB,test
+S-AB-0123,G-0123,"ghar jaane me dar lagta hai aajkal, kyu ye bata nahi pa rahi. kuch batao kya karu",hinglish,first,other,urgent,,team_written,AB,test
+S-AB-0124,G-0124,"A colleague has been sending me creepy WhatsApp messages and threatening emails after office hours, since last week.",en,first,workplace_harassment|cyber_abuse,urgent,POSH-2013|IT-66E|BNS-351,team_written,AB,test
+S-AB-0134,G-0134,Harassment ki complaint karne se meri job pe asar padega kya?,hinglish,first,workplace_harassment,info_seeking,POSH-2013,team_written,AB,test
+S-AB-0138,G-0138,मेरी सहेली पूछ रही है कि कोई उसकी लोकेशन ट्रैक करे तो क्या ये गैरकानूनी है।,hi,third,stalking,info_seeking,BNS-78,team_written,AB,test
+S-CD-0032,G-0182,घरेलू हिंसा की शिकायत का प्रोसेस क्या है? क्या पहले पुलिस के पास जाना ज़रूरी है?,hi,first,domestic_violence,info_seeking,PWDVA-2005,team_written,CD,test
+S-CD-0033,G-0183,"kal pati ki chachi ne bola ki shaadi me gaadi deni chahiye thi. Uske baad kisi ne baat nahi ki. Upar se kal pati ne bahut chilla kar baat ki aur plate fenki. Uske baad dobara nahi hua, usne sorry bola. Bas options janna chahti hu",hinglish,first,domestic_violence|dowry_harassment,non_urgent,PWDVA-2005|DPA-1961|BNS-85,team_written,CD,test
+S-CD-0034,G-0184,"My cousin's in-laws demand money from her parents every few days and say bad things to her, for two weeks. She does not know who to approach.",en,third,dowry_harassment,urgent,DPA-1961|BNS-85,team_written,CD,test
+S-CD-0046,G-0196,metro se utarne ke baad se koi mere peeche aa raha hai aur main akeli chal rahi hu. wo abhi 10 kadam peeche hai. dar lag raha hai 🙏,hinglish,first,stalking,immediate_danger,BNS-78,team_written,CD,test
+S-CD-0051,G-0201,"मेरी बहन को कल रास्ते में किसी अजनबी ने कमेंट किया, बस एक बार हुआ और वो चला गया। क्या वो अब भी शिकायत कर सकती है?",hi,third,street_harassment,non_urgent,BNS-79,team_written,CD,test
+S-CD-0058,G-0208,My husband's aunt said last week that my family should have given a car with the wedding. Nobody has mentioned it since. I just want to know what my options are,en,first,dowry_harassment,non_urgent,DPA-1961|BNS-85,team_written,CD,test
+S-CD-0060,G-0210,"ek colleague mujhe office ke baad creepy WhatsApp messages aur dhamki wale emails bhej raha h, kaafi time se. Ghar pe abhi kuch nahi bataya.",hinglish,first,workplace_harassment|cyber_abuse,urgent,POSH-2013|IT-66E|BNS-351,team_written,CD,test
+S-CD-0084,G-0234,"my sister is getting blackmailed by someone who has her edited photos, he keeps asking for money, for months. she does not know who to approach.",en,third,cyber_abuse,urgent,IT-66E|BNS-351,team_written,CD,test
+S-CD-0091,G-0241,My sister wants to know how the Internal Committee works. Can someone complain on her behalf?,en,third,workplace_harassment,info_seeking,POSH-2013,team_written,CD,test
+S-CD-0104,G-0254,"रोज़ कॉलेज जाते समय एक आदमी सीटी बजाता है और कुछ बोलता है, तीन हफ़्ते से। डर है कि और बढ़ जाएगा।",hi,first,street_harassment,urgent,BNS-79,team_written,CD,test
+S-CD-0107,G-0257,अगर कोई मेरी प्राइवेट फ़ोटो शेयर करने की धमकी दे तो पहले क्या करना चाहिए? चैट डिलीट कर दूँ?,hi,first,cyber_abuse,info_seeking,IT-66E,team_written,CD,test
+S-CD-0111,G-0261,kal market me ek ladke ne bike se jaate hue seeti maari aur nikal gaya. ek hi baar hua par ajeeb laga. kya ab bhi complaint ho sakti hai?,hinglish,first,street_harassment,non_urgent,BNS-79,team_written,CD,test
+S-CD-0113,G-0263,"kisi ne mere naam se fake profile banayi hai meri photos ke saath aur mere friends ko ganday messages bhejta hai, kaafi time se.",hinglish,first,cyber_abuse,urgent,IT-66E|BNS-351,team_written,CD,test
+S-CD-0119,G-0269,"My friend is being followed by a guy from her office parking to her home, for months.",en,third,stalking,urgent,BNS-78,team_written,CD,test
+S-CD-0124,G-0274,"मेरी बहन को कल एक अनजान अकाउंट से धमकी वाला एक डीएम आया। उसने ब्लॉक कर दिया, और कुछ नहीं हुआ। क्या वो अब भी शिकायत कर सकती है",hi,third,cyber_abuse,non_urgent,IT-66E,team_written,CD,test
+S-CD-0132,G-0282,कल मीटिंग में एक क्लाइंट ने मेरे लुक्स पर पर्सनल कमेंट किया। दोबारा नहीं हुआ। कुछ करना चाहिए क्या?,hi,first,workplace_harassment,non_urgent,POSH-2013,team_written,CD,test
+S-CD-0136,G-0286,"My husband says if the money does not come tonight he will beat me and throw me out, his mother is backing him. I am locked in the bedroom.",en,first,domestic_violence|dowry_harassment,immediate_danger,PWDVA-2005|DPA-1961|BNS-85|BNS-351,team_written,CD,test
+S-CD-0145,G-0295,A stranger has been standing outside my room door for ten minutes and keeps trying the handle. I am alone on the hostel floor.,en,first,other,immediate_danger,,team_written,CD,test
+S-EF-0006,G-0306,"My friend is not allowed to go out and her husband takes all her money, this has gone on for two weeks.",en,third,domestic_violence,urgent,PWDVA-2005,team_written,EF,test
+S-EF-0010,G-0310,"pati gusse me haath uthata hai aur meri salary bhi le leta hai, ye 3 hafte se ho raha hai",hinglish,first,domestic_violence,urgent,PWDVA-2005,team_written,EF,test
+S-EF-0012,G-0312,"मेरी सहेली के ससुराल वाले उसके माँ-बाप से हर कुछ दिन में पैसे माँगते हैं और उसे सुनाते हैं, पिछले महीने से",hi,third,dowry_harassment,urgent,DPA-1961|BNS-85,team_written,EF,test
+S-EF-0015,G-0315,"My cousin is getting blackmailed by someone who has her edited photos, he keeps asking for money, for months. She is scared it will get worse",en,third,cyber_abuse,urgent,IT-66E|BNS-351,team_written,EF,test
+S-EF-0034,G-0334,"मेरी सहेली को दो-तीन दिन पहले रास्ते में किसी अजनबी ने कमेंट किया, बस एक बार हुआ और वो चला गया। क्या वो अब भी शिकायत कर सकती है?",hi,third,street_harassment,non_urgent,BNS-79,team_written,EF,test
+S-EF-0035,G-0335,My cousin wants to know how the Internal Committee works. Can someone complain on her behalf,en,third,workplace_harassment,info_seeking,POSH-2013,team_written,EF,test
+S-EF-0045,G-0345,वही लड़का जो पीछा करता है अभी मेरे गेट के बाहर खड़ा है और कह रहा है जब तक मैं बाहर नहीं आऊँगी वो नहीं जाएगा। 🙏,hi,first,stalking,immediate_danger,BNS-78,team_written,EF,test
+S-EF-0047,G-0347,"My husband hits me whenever he is angry and takes my salary, this has been happening for the past few days. I do not know who to complain to.",en,first,domestic_violence,urgent,PWDVA-2005,team_written,EF,test
+S-EF-0056,G-0356,"ऑफिस में एक सीनियर बार-बार मेरे कंधे पर हाथ रखता है और कपड़ों पर कमेंट करता है, पिछले महीने से। एचआर उसका दोस्त है। 😟",hi,first,workplace_harassment,urgent,POSH-2013,team_written,EF,test
+S-EF-0065,G-0365,"Jisse maine baat band ki wo meri private photos leak karne ki dhamki deta hai agar paise nahi diye, kaafi time se. Kya karu",hinglish,first,cyber_abuse,urgent,IT-66E|BNS-351,team_written,EF,test
+S-EF-0075,G-0375,मेरी फ़ोटो से फेक प्रोफ़ाइल बनी है तो कहाँ रिपोर्ट करें? क्या साइबर क्राइम पोर्टल होता है?,hi,first,cyber_abuse,info_seeking,IT-66E,team_written,EF,test
+S-EF-0081,G-0381,जो लड़का ऑनलाइन मेरी लोकेशन ट्रैक करता है वो अभी मैसेज कर रहा है कि वो मेरी बिल्डिंग के बाहर है और दरवाज़ा नहीं खोला तो ऊपर आ जाएगा,hi,first,stalking|cyber_abuse,immediate_danger,BNS-78|IT-66E|BNS-351,team_written,EF,test
+S-EF-0082,G-0382,something happened today and i feel weird about it but i am not sure it even matters.,en,first,other,non_urgent,,team_written,EF,test
+S-EF-0083,G-0383,पति नशे में हैं और चिल्ला रहे हैं कि एक घंटे में भाई के जाने के बाद मुझे मारेंगे। मैं बाथरूम में छिपी हूँ।,hi,first,domestic_violence,immediate_danger,PWDVA-2005|BNS-351,team_written,EF,test
+S-EF-0085,G-0385,अगर मैं अभी ससुराल में ही रहती हूँ तो क्या दहेज की शिकायत कर सकती हूँ?,hi,first,dowry_harassment,info_seeking,DPA-1961|BNS-85,team_written,EF,test
+S-EF-0087,G-0387,What are my rights if someone follows me every day? Do I need proof first?,en,first,stalking,info_seeking,BNS-78,team_written,EF,test
+S-EF-0098,G-0398,मेरी बहन पूछ रही है कि कोई उसकी लोकेशन ट्रैक करे तो क्या ये गैरकानूनी है। 😢,hi,third,stalking,info_seeking,BNS-78,team_written,EF,test
+S-EF-0101,G-0401,Kya kisi ka thodi der peecha karna crime hota hai?,hinglish,first,street_harassment,info_seeking,BNS-79,team_written,EF,test
+S-EF-0109,G-0409,"जिसे मैंने मना किया था उसने कल एक मैसेज कर दिया, बस एक ही। मैंने जवाब नहीं दिया। क्या अब भी शिकायत हो सकती है?",hi,first,stalking,non_urgent,BNS-78,team_written,EF,test
+S-EF-0112,G-0412,"My manager says he will hold my promotion if I do not go out for dinner with him, since last week pleaseee",en,first,workplace_harassment,urgent,POSH-2013,team_written,EF,test
+S-EF-0115,G-0415,"meri friend ko bahar jaane nahi dete aur pati uske saare paise le leta hai, ye 2 hafte se chal raha hai. Use dar hai ki aur badhega",hinglish,third,domestic_violence,urgent,PWDVA-2005,team_written,EF,test
+S-EF-0131,G-0431,"ghar jaane me dar lagta hai aajkal, kyu ye bata nhi pa rahi. kuch batao kyaa kru",hinglish,first,other,urgent,,team_written,EF,test
+S-EF-0132,G-0432,पिछले हफ़्ते मुझे लगा कि घर के रास्ते में वही लड़का दो बार मेरे पीछे आया। उसके बाद कुछ नहीं हुआ। क्या ये उत्पीड़न होता है?,hi,first,stalking,non_urgent,BNS-78,team_written,EF,test
+S-EF-0136,G-0436,"कोई रोज़ शाम को मेरी बिल्डिंग के बाहर बैठा रहता है और मुझे देखता है, तीन हफ़्ते से। अब उसे मेरे आने-जाने का समय भी पता है।",hi,first,stalking,urgent,BNS-78,team_written,EF,test
+S-EF-0139,G-0439,"ससुराल वाले और पति मुझे घर से बाहर नहीं निकलने देते और दिन भर ताने मारते हैं, पिछले महीने से। मैं फँसी हुई महसूस करती हूँ",hi,first,domestic_violence,urgent,PWDVA-2005,team_written,EF,test
