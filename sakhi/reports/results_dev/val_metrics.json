@@ -1,0 +1,133 @@
+{
+  "result_label": "val",
+  "metrics_csv": "sakhi\\reports\\results_dev\\val_metrics.csv",
+  "rows": [
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "immediate_danger",
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "f1": 0.9230769230769231,
+      "support": 7
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "urgent",
+      "precision": 0.9629629629629629,
+      "recall": 1.0,
+      "f1": 0.9811320754716981,
+      "support": 26
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "non_urgent",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 24
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "info_seeking",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 10
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "macro",
+      "label": "macro_avg",
+      "f1": 0.9760522496371553,
+      "support": 67
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "street_harassment",
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "f1": 0.9230769230769231,
+      "support": 7
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "stalking",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 10
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "domestic_violence",
+      "precision": 1.0,
+      "recall": 0.8823529411764706,
+      "f1": 0.9375,
+      "support": 17
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "workplace_harassment",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 7
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "dowry_harassment",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 10
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "cyber_abuse",
+      "precision": 1.0,
+      "recall": 0.9545454545454546,
+      "f1": 0.9767441860465116,
+      "support": 22
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "other",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1
+    },
+    {
+      "task": "situation",
+      "metric_scope": "macro",
+      "label": "macro_avg",
+      "f1": 0.976760158446205,
+      "support": 74
+    },
+    {
+      "task": "situation",
+      "metric_scope": "micro",
+      "label": "micro_avg",
+      "f1": 0.9722222222222222,
+      "support": 74
+    },
+    {
+      "task": "situation",
+      "metric_scope": "subset_accuracy",
+      "label": "subset_accuracy",
+      "f1": 0.9552238805970149,
+      "support": 67
+    }
+  ]
+}

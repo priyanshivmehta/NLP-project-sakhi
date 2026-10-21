@@ -1,23 +1,52 @@
-# VERIFY EVERY NUMBER AND URL AGAINST OFFICIAL GOVERNMENT SOURCES BEFORE RELEASE
-authorities:
-  police_emergency:
-    name: Police / emergency
-    phone: TODO_VERIFY
-    url: TODO_VERIFY
+# ---------------------------------------------------------------------------
+# Sakhi helplines and routing. This is the ONLY place contact details live.
+# *** VERIFY BEFORE RELEASE ***  Check every number/URL against the official
+# source (e.g. the National Commission for Women, the Ministry of Home
+# Affairs, cybercrime.gov.in) and record the date you checked it.
+# ---------------------------------------------------------------------------
+helplines:
+  emergency:
+    name: "National Emergency Number (police, fire, ambulance)"
+    number: "112"
+    verify_before_release: true
   women_helpline:
-    name: Women's helpline
-    phone: TODO_VERIFY
-    url: TODO_VERIFY
-  workplace_internal_committee:
-    name: Workplace Internal Committee
-    phone: TODO_VERIFY
-    url: TODO_VERIFY
-  protection_officer:
-    name: Protection Officer
-    phone: TODO_VERIFY
-    url: TODO_VERIFY
+    name: "Women Helpline"
+    number: "181"
+    verify_before_release: true
+  cybercrime_helpline:
+    name: "National Cyber Crime Helpline"
+    number: "1930"
+    verify_before_release: true
   cybercrime_portal:
-    name: National cybercrime portal
-    phone: TODO_VERIFY
-    url: TODO_VERIFY
+    name: "National Cyber Crime Reporting Portal"
+    url: "https://cybercrime.gov.in"
+    verify_before_release: true
+  police:
+    name: "Police (nearest police station)"
+    notes: "You can go in person, or call the emergency number if you are in danger."
+    verify_before_release: true
+  internal_committee:
+    name: "Internal Committee at your workplace (POSH Act)"
+    notes: "Workplaces with 10 or more employees are expected to have one. Ask HR for its details."
+    verify_before_release: true
+  local_committee:
+    name: "Local Committee (district level, POSH Act)"
+    notes: "For workplaces without an Internal Committee. Ask the District Officer's office."
+    verify_before_release: true
+  protection_officer:
+    name: "Protection Officer (Domestic Violence Act)"
+    notes: "Ask your district office or the women helpline how to reach the one for your area."
+    verify_before_release: true
 
+# Which contacts to show for each situation label (keys from `helplines`).
+routing:
+  street_harassment: [police, women_helpline]
+  stalking: [police, women_helpline]
+  domestic_violence: [protection_officer, women_helpline, police]
+  dowry_harassment: [police, protection_officer, women_helpline]
+  workplace_harassment: [internal_committee, local_committee, women_helpline]
+  cyber_abuse: [cybercrime_portal, cybercrime_helpline, police]
+  other: [women_helpline, emergency]
+
+# Shown when the model is not confident.
+fallback: [women_helpline, emergency]
