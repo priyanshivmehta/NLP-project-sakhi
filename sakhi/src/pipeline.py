@@ -34,6 +34,7 @@ import numpy as np
 import pandas as pd
 
 from sakhi.src.preprocess import _load_spelling_variants, preprocess_text
+from sakhi.src.safety_rules import evaluate_safety
 from sakhi.src.train_baseline import (
     MODELS_DIR,
     PROCESSED_DIR,
@@ -67,7 +68,14 @@ def models_available() -> bool:
 @lru_cache(maxsize=2)
 def load_artifacts(directory: str | None = None) -> BaselineArtifacts:
     folder = Path(directory) if directory else models_dir()
-    if not models_available() and not directory:
+    needed = (
+        "tfidf_features.joblib",
+        "urgency_model.joblib",
+        "situation_model.joblib",
+        "situation_thresholds.json",
+        "model_metadata.json",
+    )
+    if not all((folder / name).is_file() for name in needed):
         raise FileNotFoundError(
             f"Trained models not found in {folder}. Run: python -m sakhi.src.train_baseline"
         )
@@ -113,6 +121,20 @@ def _retrieve(text: str, k: int) -> tuple[list[dict[str, Any]], str]:
 
 def analyze(text: str, top_k_provisions: int = 3) -> dict[str, Any]:
     """Classify one message and return situation, urgency and retrieved provisions."""
+    safety = evaluate_safety(text)
+    if safety["rule_fired"]:
+        situations = [{"label": "other", "prob": 1.0, "predicted": True}]
+        urgency = {
+            "label": "immediate_danger" if safety["immediate_danger"] else "urgent",
+            "probs": {},
+        }
+        return {
+            "situations": situations,
+            "urgency": urgency,
+            "provisions": [],
+            "safety": safety,
+            "meta": {"language_detected": detect_language(text), "retrieval": "skipped"},
+        }
     artifacts = load_artifacts()
     language = detect_language(text)
     model_input = preprocess_text(text, language, _spelling_variants())["final_model_input"]
@@ -141,6 +163,7 @@ def analyze(text: str, top_k_provisions: int = 3) -> dict[str, Any]:
         "situations": situations,
         "urgency": {"label": urgency_label, "probs": urgency},
         "provisions": provisions,
+        "safety": safety,
         "meta": {"language_detected": language, "retrieval": retrieval_state},
     }
 

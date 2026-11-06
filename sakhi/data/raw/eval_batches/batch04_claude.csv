@@ -1,0 +1,37 @@
+text,language,perspective,situation_labels,urgency
+"meri saheli ko uske pati ne ghar me band kar diya hai aur maar raha hai abhi, wo ro rahi hai please bacha lijiye.",hinglish,third,domestic_violence,immediate_danger
+"A boy is following my sister right now from the bus stand and taking pictures, she is hiding in a shop.",en,third,stalking|street_harassment,immediate_danger
+"मेरी पड़ोसिन की चिल्लाने की आवाज़ें आ रही हैं, उनका बेटा और बहु उन्हें मार रहे हैं, तुरंत गाड़ी भेजिए।",hi,third,domestic_violence,immediate_danger
+"Help fast, my roommate's ex-boyfriend has shown up at our doorstep with a knife and is threatening her.",en,third,stalking|other,immediate_danger
+"मेरी सहेली के ससुराल वाले उसे रोज़ दहेज के लिए प्रताड़ित करते हैं और कल शाम उन्होंने खाना भी नहीं दिया।",hi,third,domestic_violence|dowry_harassment,urgent
+"My colleague's manager is constantly forcing her to stay late and making improper physical advances at work.",en,third,workplace_harassment|sexual_violence,urgent
+"Meri cousin ko ek fake account se regularly morph pic bhej kar blackmail kiya ja raha hai, wo bohot dar gayi hai.",hinglish,third,cyber_abuse,urgent
+"मेरी छोटी बहन को उसका सीनियर पिछले दो हफ़्तों से रोज़ कॉलेज से घर तक फ़ॉलो कर रहा है और जबरन बात करने की कोशिश करता है।",hi,third,stalking|street_harassment,urgent
+"My flatmate's landlord enters our apartment without asking and passes inappropriate comments about her clothes.",en,third,sexual_violence|other,urgent
+"Meri padosi ki beti ko uske pati dwara daily mara pita jata hai, kya hum uski taraf se complaint kar sakte hai?",hinglish,third,domestic_violence,urgent
+"मेरी सहेली को दफ़्तर का एक सीनियर हर रात मैसेज करता है और मना करने पर अप्रेजल खराब करने की धमकी दे रहा है।",hi,third,workplace_harassment|cyber_abuse,urgent
+"An online stranger posted my friend's private phone number on a public group, she is getting continuous vulgar calls.",en,third,cyber_abuse,urgent
+"Meri sister ke sasural me roz scooter aur cash ki demand ko lekar jhagda hota hai, unhone use dhamki bhi di hai.",hinglish,third,dowry_harassment|domestic_violence,urgent
+"मेरी बड़ी बहन का पति उनका सारा वेतन छीन लेता है और घर से निकालने की धमकी देता रहता है।",hi,third,domestic_violence,urgent
+"My neighbour told me that her brother in law stares at her improperly whenever her husband leaves for work.",en,third,sexual_violence|domestic_violence,urgent
+"Meri rimjhim naam ki friend ko auto driver roz rasta badal kar le jaane ki koshish karta hai, wo bohot ghabra rahi hai.",hinglish,third,street_harassment,urgent
+"मेरी सहेली के दफ़्तर में कुछ दिन पहले एक सहकर्मी ने उस पर गलत टिप्पणी की थी, वह पूछ रही थी कि HR को कैसे बताएं।",hi,third,workplace_harassment,non_urgent
+"Last weekend a guy on the street shouted bad comments at my sister, it didn't escalate but she felt uncomfortable.",en,third,street_harassment,non_urgent
+"Meri roommate ko pichle hafte ek unknown number se ajeeb call aaya tha, uske baad se koi message nahi aaya.",hinglish,third,cyber_abuse,non_urgent
+"मेरी पड़ोसिन ने बताया कि पिछले महीने शादी के फ़ंक्शन में उनके देवर ने दहेज को लेकर ताना मारा था।",hi,third,dowry_harassment,non_urgent
+"My friend told me her husband pushed her during an argument three days ago, things are normal now but I am concerned.",en,third,domestic_violence,non_urgent
+"Ek mahine pehle meri sister ki cab ke driver ne badtameezi se baat ki thi, kya uski rating ya report abhi ho sakti hai?",hinglish,third,other,non_urgent
+"मेरी ननद के पुराने मकान मालिक ने सिक्योरिटी डिपॉजिट रोकने की धमकी दी थी, पर अब वो मामला शांत है।",hi,third,other,non_urgent
+"My cousin's ex sent a long mean email last week after their breakup, but he hasn't contacted her since.",en,third,cyber_abuse,non_urgent
+"Kafi din pehle meri saheli ke sath metro station ke bahar kisi ne dhakka mukki ki thi, wo safe ghar pahunch gayi thi.",hinglish,third,street_harassment,non_urgent
+"मेरी सहेली ने बताया कि कॉलेज के फेस्ट में एक लड़के ने उसका हाथ पकड़ा था, वह बहुत असहज हो गई थी।",hi,third,sexual_violence|street_harassment,non_urgent
+"Two weeks back a delivery person asked my friend inappropriate personal questions, she blocked him immediately.",en,third,cyber_abuse|other,non_urgent
+"Pichle maheene meri colleague ke pati ne uske parents ko fone karke bhala bura kaha tha, ab situation shaant hai.",hinglish,third,domestic_violence,non_urgent
+"क्या कोई महिला अपनी सहेली की तरफ से बिना उसका नाम उजागर किए घरेलू हिंसा की जानकारी दे सकती है?",hi,third,domestic_violence,info_seeking
+"Can I file a cyberbullying report on behalf of my younger sister if she is too scared to do it herself?",en,third,cyber_abuse,info_seeking
+"Kya workplace harassment committee me bina kisi witness ke beti ya behan ki taraf se complaint darj ho sakti hai?",hinglish,third,workplace_harassment,info_seeking
+"नमस्ते, यदि किसी लड़की को कोई ऑनलाइन परेशान करे तो क्या पुलिस में शिकायत के लिए उसका खुद जाना ज़रूरी है?",hi,third,cyber_abuse,info_seeking
+"I want to know the legal procedure to help a female neighbour who is facing continuous dowry harassment from in-laws.",en,third,dowry_harassment,info_seeking
+"Kya raste me ladkiyon par comments karne walon ke khilaf bina police station jaye online report darj ho sakti hai?",hinglish,third,street_harassment,info_seeking
+"मेरी पड़ोसिन के साथ उनका मकान मालिक अभद्र व्यवहार करता है, क्या हम गुप्त रूप से शिकायत दर्ज करा सकते हैं?",hi,third,other,info_seeking
+"Could you guide me on the documents required to support a relative who wants to report illegal stalking?",en,third,stalking,info_seeking

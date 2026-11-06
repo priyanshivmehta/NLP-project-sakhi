@@ -5,6 +5,7 @@ situation_labels:
   - workplace_harassment
   - dowry_harassment
   - cyber_abuse
+  - sexual_violence
   - other
 
 urgency_labels:
@@ -22,3 +23,7 @@ allowed_perspectives:
   - first
   - third
 
+allowed_sources:
+  - ai_generated
+  - team_written
+  - peer_written

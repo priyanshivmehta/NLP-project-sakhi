@@ -1,0 +1,40 @@
+text,language,perspective,situation_labels,urgency
+abhi office parking me hu mera manager gaadi ke paas khada hai bol raha drop kar dunga mana kiya to nhi hat raha koi guard nhi hai,hinglish,first,workplace_harassment,immediate_danger
+HELP my colleague is stuck in the office with our boss everyone left he locked the door and she just texted me she is scared,en,third,workplace_harassment,immediate_danger
+ex ne abhi msg kiya ki main tere office ke bahar hu neeche aa warna andar aata hu raat ke 11 baje hai mai akeli hu,hinglish,first,"stalking|cyber_abuse",immediate_danger
+मेरी सहकर्मी का फोन आया वो रो रही है कैब वाला उसे ऑफिस की जगह किसी और रास्ते पर ले जा रहा है और कॉल काट दी,hi,third,other,immediate_danger
+shift khatam hui raat ke 12 baje msg aaya boss ka tum akeli ho kya aa jao ghar pe baat karte hai ye pichle 3 hafte se chal raha hai,hinglish,first,workplace_harassment,urgent
+मेरे टीम लीड ने कहा कि प्रमोशन चाहिए तो उनके साथ डिनर पर चलना होगा शुक्रवार तक बताना है और रोज़ याद दिलाते हैं,hi,first,workplace_harassment,urgent
+someone is sharing my photo from the company group on a fake page with nasty captions and says more will come if i report it,en,first,cyber_abuse,urgent
+kisi ne mere naam se fake id banayi hai aur mere clients ko ajeeb msgs bhej raha hai kal 2 clients ne call kiya,hinglish,first,cyber_abuse,urgent
+मेरी दोस्त के ऑफिस में सीनियर रोज़ उसे इशारों में गंदी बातें बोलता है और कहता है शिकायत की तो नौकरी से निकलवा दूँगा,hi,third,workplace_harassment,urgent
+meri colleague ko uska ex roz night me anjaan numbers se call n msg karta hai aaj bola ki uska office address pata hai,hinglish,third,"stalking|cyber_abuse",urgent
+my coworker keeps commenting on my body in team meetings and when i asked him to stop he said i cant take a joke its been months,en,first,workplace_harassment,urgent
+एक आदमी ने मेरी प्रोफाइल फोटो से गंदी तस्वीर बनाकर भेजी और बोला कल शाम तक 5000 दो वरना ऑफिस ग्रुप में डालूँगा,hi,first,cyber_abuse,urgent
+ससुराल वाले बोलते हैं नौकरी छोड़ दो और पापा से दो लाख और मँगवाओ वरना घर में नहीं रहने देंगे रोज़ यही चलता है,hi,first,"dowry_harassment|domestic_violence",urgent
+my husband checks my phone every night and shouts if a male colleague messages he threw my laptop yesterday and said next time it will be me,en,first,domestic_violence,urgent
+हमारे ऑफिस का वॉचमैन रोज़ शाम को मेरा पीछा करके मेट्रो तक आता है आज बोला कल से साथ चलूँगा,hi,first,"stalking|street_harassment",urgent
+interview ke baad HR bola job pakki hai bas ek raat hotel me milo kal subah tak decide kar lo,hinglish,first,workplace_harassment,urgent
+ek client ne meeting ke baad hath pakad liya tha ek hi baar hua maine hata diya ab confuse hu ki boss ko batau ya nhi,hinglish,first,workplace_harassment,non_urgent
+कल ऑफिस की पार्टी में किसी ने मेरी फोटो खींच ली मुझे पता नहीं क्यों पर अजीब लग रहा है क्या करूँ,hi,first,cyber_abuse,non_urgent
+my manager once said something rude about my clothes in front of everyone he apologised later but i still feel off,en,first,workplace_harassment,non_urgent
+कैब में ड्राइवर ने बहुत घूरा मैं उतर गई कुछ हुआ नहीं पर नींद नहीं आ रही,hi,first,street_harassment,non_urgent
+someone left a creepy comment on my linkedin post i deleted it n blocked him should i report or let it go,en,first,cyber_abuse,non_urgent
+mere ghar me pados wali aunty bolti hai itni raat tak job karti ho kaisi ladki ho bas taane hai kuch aur nhi hua,hinglish,first,other,non_urgent
+meri bahan ki saas ne ek baar bola ki shaadi me kam diya par uske baad kuch nhi bola use bataun ya chhod du,hinglish,third,dowry_harassment,non_urgent
+मेरी कलीग को किसी ने एक बार अनजान नंबर से गंदा मैसेज भेजा उसके बाद नहीं आया पर वो डरी हुई है,hi,third,cyber_abuse,non_urgent
+once an uber driver kept asking where i live i gave a wrong area and he dropped me fine but cant stop thinking about it,en,first,street_harassment,non_urgent
+पति ने एक बार गुस्से में थाली फेंकी थी उसके बाद सब ठीक है पर मैं सोच रही हूँ क्या ये आगे बढ़ सकता है,hi,first,domestic_violence,non_urgent
+old classmate ne meri purani pic whatsapp status pe dekh ke ajeeb msg kiya ek baar ignore kar diya ab sochti hu block kar du,hinglish,first,"cyber_abuse|other",non_urgent
+meri dost ko ek baar ek senior ne nashe me galat chhua tha ab wo normal hai par puch rahi hai kya ab bhi kuch kar sakti hai,hinglish,third,sexual_violence,non_urgent
+office me yaun shoshan ki shikayat kahan karte hain aur kya company ko sunna zaroori hota hai,hi,first,workplace_harassment,info_seeking
+how do i file a complaint about my boss inside the company and what happens after i submit it,en,first,workplace_harassment,info_seeking
+agar office me complaint karu to kya meri naam gupt rahega aur job pe asar padega kya,hinglish,first,workplace_harassment,info_seeking
+कंपनी में शिकायत समिति क्या होती है और उसमें कौन कौन होता है,hi,first,workplace_harassment,info_seeking
+mujhe pata nhi complaint likhit deni padti hai ya mail bhi chalega aur kitne din me jawab aata hai,hinglish,first,workplace_harassment,info_seeking
+if someone is blackmailing me online with my photos where do i report it and should i save the chats first,en,first,cyber_abuse,info_seeking
+fake profile ko report karne ke baad kitne din me hat jata hai aur kya kisi ko pata chalega ki maine report kiya,hinglish,first,cyber_abuse,info_seeking
+अगर कोई ऑनलाइन धमकी दे तो पहले किसे बताना चाहिए और स्क्रीनशॉट कैसे सुरक्षित रखूँ,hi,first,cyber_abuse,info_seeking
+can in laws legally ask for money or gifts after marriage and where do i go if they keep pressuring,en,first,dowry_harassment,info_seeking
+husband se darr lagta hai par abhi kuch hua nhi kisi ko bata sakti hu kya aur kaun sunega,hinglish,first,domestic_violence,info_seeking
+स्टॉकर से बचने के लिए ऑफिस में सिक्योरिटी को कैसे बताऊँ और क्या वो मेरी मदद कर सकते हैं,hi,first,stalking,info_seeking

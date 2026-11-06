@@ -1,0 +1,41 @@
+text,language,perspective,situation_labels,urgency
+"मेरी बहू को कमरे में बंद कर दिया है और चिल्लाने की आवाज़ आ रही है, तुरंत मदद भेजिए।",hi,third,domestic_violence,immediate_danger
+"My son and his father are threatening my daughter in law with a hot iron right now, please send someone.",en,third,domestic_violence|dowry_harassment,immediate_danger
+"Mujhe ghar se nikal rahe hai abhi raat ko, saas aur pati maar peet kar rahe hai, madad kijiye.",hinglish,first,domestic_violence,immediate_danger
+"मेरी बेटी को उसके ससुराल वाले छत से फेंकने की धमकी दे रहे हैं, अभी पुलिस भेजिए।",hi,third,domestic_violence|dowry_harassment,immediate_danger
+Sadar pranam. Pichle kuch hafto se mere damad aur unke gharwale meri beti se gadi ke paise mang rahe hai aur roz maarpeet karte hai.,hinglish,third,domestic_violence|dowry_harassment,urgent
+"नमस्ते, मैं एक वृद्धा हूँ। मेरे पति हर शाम शराब पीकर मुझे गाली-गलौज करते हैं और सामान तोड़ते हैं, क्या मुझे शिकायत करनी चाहिए?",hi,first,domestic_violence,urgent
+"Sir, mere sasural wale mujhe pichle do maheene se khana nahi de rahe aur paise lane ko bolte hai.",hinglish,first,domestic_violence|dowry_harassment,urgent
+"मेरी बेटी के ससुर उस पर गलत नज़र रखते हैं और अकेले में गलत तरह से छूने की कोशिश करते हैं, वह बहुत डरी हुई है।",hi,third,sexual_violence|domestic_violence,urgent
+"Respectable sir, my daughter's husband routinely locks her in the room and demands extra cash from our family.",en,third,domestic_violence|dowry_harassment,urgent
+"Kshama kijiyega, kya daftar me senior officer dwara bar-bar anuchit maang karna apradh hai? Meri beti bohot tanav me hai.",hinglish,third,workplace_harassment,urgent
+"Mujhe shak hai ki mere sasur meri beti par galat niyat rakhte hai, woh bohot rati hai, please suggest what to do.",hinglish,third,sexual_violence|domestic_violence,urgent
+नमस्ते। एक अज्ञात व्यक्ति मेरी बहू के फ़ोन पर लगातार अश्लील तस्वीरें भेज रहा है और पैसों की मांग कर रहा है।,hi,third,cyber_abuse,urgent
+"Sir, an online caller is threatening to publish edited photos of my daughter if we do not pay by tomorrow.",en,third,cyber_abuse,urgent
+"Meri natin ka ek classmate use college ke bahar roz rokta hai aur ghar tak pichha karta hai, kya ye police mamla hai?",hinglish,third,stalking|street_harassment,urgent
+"Respected desk, my husband has taken away my salary card and threatens to throw me out if I ask for it.",en,first,domestic_violence,urgent
+"Humare padosi meri beti ko raste me gher kar tana marte hai aur rasta rokte hai, hume darr lagta hai.",hinglish,third,street_harassment,urgent
+"प्रणाम, मेरे दामाद ने मेरी बेटी को तीन दिन से बिना खाने के बंद कर रखा है, वह बहुत कमजोर हो गई है।",hi,third,domestic_violence,urgent
+Mera ex-boss mujhe phone karke dhamki deta hai ki career kharab kar dega agar milne nahi aayi.,hinglish,first,workplace_harassment|cyber_abuse,urgent
+My landlord comes to my room late night without permission and speaks in an inappropriate manner.,en,first,sexual_violence|other,urgent
+"नमस्ते जी, मेरी संपत्ति के कागजात मेरे जेठ ने जबरन छीन लिए हैं और मुझे घर छोड़ने पर मजबूर कर रहे हैं।",hi,first,other,urgent
+"सादर प्रणाम। पिछले महीने दफ़्तर के एक सहकर्मी ने मेरे साथ अभद्र भाषा का प्रयोग किया था, क्या अब शिकायत हो सकती है?",hi,first,workplace_harassment,non_urgent
+"Sir, two weeks back a bus conductor touched me inappropriately, I just want to know if I can report now.",en,first,sexual_violence|street_harassment,non_urgent
+Kuch din pehle sasural me shadi ke kharche ko lekar kafi behas hui aur pati ne thappad mara tha.,hinglish,first,domestic_violence|dowry_harassment,non_urgent
+"नमस्ते। मेरी बेटी को एक महीने पहले किसी अनजान नंबर से बुरे संदेश आए थे, अब बंद हो गए हैं पर मन चिंतित है।",hi,third,cyber_abuse,non_urgent
+"I am an elderly lady, last month my brother in law used derogatory words regarding dowry during a function.",en,first,dowry_harassment,non_urgent
+"Meri bahu batati hai ki uske office me manager mahilao par anuchit tippani karte hai, kya ye shikayat yogya hai?",hinglish,third,workplace_harassment,non_urgent
+"Ek hafte pehle raste me ek ladka pichha kar raha tha, ab nahi dikha, kya police me suchna deni chahiye?",hinglish,first,stalking,non_urgent
+"प्रणाम, कल शाम बाज़ार में कुछ लड़कों ने मुझ पर फब्तियां कसी थीं, क्या इस उम्र में भी शिकायत दर्ज करा सकते हैं?",hi,first,street_harassment,non_urgent
+"My daughter had an argument with her husband who pushed her last Sunday, things are quiet now but I worry.",en,third,domestic_violence,non_urgent
+Purane makan malik ne do maheene pehle humare parivar ko jhoothe case me fansane ki dhamki di thi.,hinglish,first,other,non_urgent
+Pichle mahine online shopping site ke delivery boy ne beti ko bina wajah message kiye the.,hinglish,third,cyber_abuse|other,non_urgent
+"Respected mam, my daughter's ex boyfriend sent a rude email last fortnight, no messages after that.",en,third,cyber_abuse,non_urgent
+"सादर प्रणाम, क्या घरेलू हिंसा से संरक्षण कानून के तहत वरिष्ठ नागरिक माताओं को भी सहायता मिलती है?",hi,first,other,info_seeking
+Kindly inform me about the procedure to file a confidential workplace harassment complaint for my daughter.,en,third,workplace_harassment,info_seeking
+"Namaste, yadi koi sadak par mahilao ko ghoorta ya pareshan karta hai to kis helpline number par contact karein?",hinglish,first,street_harassment,info_seeking
+"Kya dowry harassment ki complaint bina pati ko bataye police me di ja sakti hai, kripya prakiya batayein.",hinglish,first,dowry_harassment,info_seeking
+"नमस्ते जी, साइबर क्राइम पोर्टल पर शिकायत दर्ज कराने के लिए किन दस्तावेज़ों की आवश्यकता होती है?",hi,first,cyber_abuse,info_seeking
+Could you please explain what acts legally qualify under stalking and street harassment in India?,en,first,stalking|street_harassment,info_seeking
+Respectful query: what are the official rights and support available for elderly women facing domestic disputes?,en,first,other,info_seeking
+Mujhe ye janana hai ki workplace harassment committee me shikayat kaise darj hoti hai.,hinglish,first,workplace_harassment,info_seeking

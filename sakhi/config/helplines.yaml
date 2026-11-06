@@ -37,6 +37,14 @@ helplines:
     name: "Protection Officer (Domestic Violence Act)"
     notes: "Ask your district office or the women helpline how to reach the one for your area."
     verify_before_release: true
+  child_protection:
+    name: "Child protection helpline"
+    number: "VERIFY BEFORE RELEASE"
+    verify_before_release: true
+  crisis_support:
+    name: "Crisis support"
+    number: "VERIFY BEFORE RELEASE"
+    verify_before_release: true
 
 # Which contacts to show for each situation label (keys from `helplines`).
 routing:
@@ -46,6 +54,7 @@ routing:
   dowry_harassment: [police, protection_officer, women_helpline]
   workplace_harassment: [internal_committee, local_committee, women_helpline]
   cyber_abuse: [cybercrime_portal, cybercrime_helpline, police]
+  sexual_violence: [police, women_helpline]
   other: [women_helpline, emergency]
 
 # Shown when the model is not confident.

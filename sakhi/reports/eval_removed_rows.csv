@@ -1,0 +1,2 @@
+id,text,reason,matched_id,similarity
+batch06_claude-002,मेरी बेटी को उसके ससुराल वाले अभी छत से फेंकने की धमकी दे रहे हैं जल्दी पुलिस भेजो,near_duplicate,batch02_claude-003,0.9019

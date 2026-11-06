@@ -14,6 +14,7 @@ Safety rules from the README that this app enforces:
 """
 import csv
 import importlib
+import os
 import sys
 from pathlib import Path
 
@@ -96,55 +97,20 @@ def render_contact(key):
 #     "urgency":    {"label": str, "probs": {level: float, ...}},
 #     "provisions": [{"act": str, "section": str, "text": str, "score": float}, ...],
 #   }
-# If `sakhi/src/pipeline.py` defines `analyze` with this contract, the app uses
-# it. Otherwise it falls back to a keyword DEMO stub (never report its output).
-
-DEMO_SITUATION_KEYWORDS = {
-    "street_harassment": ["comment", "whistle", "seeti", "eve teas", "catcall", "bus stop", "ghur", "कमेंट", "सीटी", "घूर"],
-    "stalking": ["follow", "peecha", "peeche", "stalk", "track", "location", "पीछा", "पीछे", "ट्रैक"],
-    "domestic_violence": ["husband", "pati", "पति", "beat", "hits me", "marta", "sasural", "in-laws", "ससुराल", "घरेलू", "domestic"],
-    "dowry_harassment": ["dowry", "dahej", "दहेज", "paise maang", "demanding money", "पैसे माँग"],
-    "workplace_harassment": ["manager", "boss", "colleague", "office", "senior", "promotion", "workplace", "मैनेजर", "ऑफिस", "कलीग"],
-    "cyber_abuse": ["fake profile", "fake account", "morphed", "blackmail", "private photo", "instagram", "whatsapp", "फेक", "ब्लैकमेल", "फ़ोटो"],
-}
-DEMO_URGENCY_CUES = {
-    "immediate_danger": ["right now", "abhi", "tonight", "aaj raat", "locked", "band kar", "outside my", "behind me", "अभी", "आज रात", "बंद"],
-    "urgent": ["every day", "roz", "weeks", "hafte", "threat", "dhamki", "blackmail", "keeps", "रोज़", "हफ़्ते", "धमकी"],
-    "info_seeking": ["process", "how do", "how can", "what can", "kaise", "can a woman", "क्या", "कैसे", "?"],
-}
-
-
-def demo_analyze(text):
-    t = text.lower()
-    sits = []
-    for label, kws in DEMO_SITUATION_KEYWORDS.items():
-        hits = sum(k in t for k in kws)
-        sits.append({"label": label, "prob": min(0.95, 0.45 + 0.15 * hits) if hits else 0.05,
-                     "predicted": hits > 0})
-    if not any(s["predicted"] for s in sits):
-        sits.append({"label": "other", "prob": 0.30, "predicted": True})
-    scores = {u: 0.05 for u in URGENCY_ORDER}
-    scores["non_urgent"] = 0.20
-    for level, cues in DEMO_URGENCY_CUES.items():
-        scores[level] += 0.30 * sum(c in t for c in cues)
-    total = sum(scores.values())
-    probs = {k: v / total for k, v in scores.items()}
-    best = max(URGENCY_ORDER, key=lambda k: (probs[k], -URGENCY_ORDER.index(k)))
-    return {"situations": sits, "urgency": {"label": best, "probs": probs}, "provisions": []}
-
-
 @st.cache_resource
 def get_backend():
-    try:
-        mod = importlib.import_module("sakhi.src.pipeline")
-        if not mod.models_available():
-            raise FileNotFoundError("trained models not found; run python -m sakhi.src.train_baseline")
-        return getattr(mod, "analyze"), "sakhi.src.pipeline.analyze (baseline TF-IDF + LR)", False
-    except Exception as exc:  # missing module, missing function, import error
-        return demo_analyze, f"DEMO keyword stub ({type(exc).__name__}: {exc})", True
+    mod = importlib.import_module("sakhi.src.pipeline")
+    if not mod.models_available():
+        if os.environ.get("SAKHI_DEPLOYED", "").casefold() in {"1", "true", "yes"}:
+            raise RuntimeError(
+                "SAKHI_DEPLOYED is set but trained models are unavailable. "
+                "Configure SAKHI_MODELS_DIR before starting the app."
+            )
+        return None, "No trained model configured"
+        return getattr(mod, "analyze"), "sakhi.src.pipeline.analyze (baseline TF-IDF + LR)"
 
 
-analyze, BACKEND_NAME, IS_DEMO = get_backend()
+analyze, BACKEND_NAME = get_backend()
 
 
 # ----------------------------------------------------------------------------
@@ -191,14 +157,15 @@ if use_sample:
     else:
         st.sidebar.warning("sample_fictional.csv not found.")
 
-if IS_DEMO:
-    st.warning("DEMO MODE: no trained pipeline is connected. Results come from a keyword stub "
-               "and are NOT model output. Do not report them.")
+if analyze is None:
+    st.error(
+        "No trained model is available. Set SAKHI_MODELS_DIR to a trained model "
+        "directory before using Sakhi."
+    )
 
-with st.form("sakhi_form", clear_on_submit=False):
+with st.form("sakhi_form", clear_on_submit=True):
     text = st.text_area("Tell Sakhi what is happening, in your own words",
                         value=sample["text"] if sample else "",
-                        key=f"msg_{sample['id'] if sample else 'free'}",
                         height=140,
                         placeholder="Hindi, Hinglish or English. A friend can write on her behalf.")
     submitted = st.form_submit_button("Get guidance", type="primary")
@@ -213,11 +180,19 @@ if submitted:
         st.warning("Please type a message first.")
         st.stop()
 
-    result = analyze(text)  # the message is never saved, logged or put in session_state
+    if analyze is None:
+        st.error("Guidance is unavailable until a trained model is configured.")
+        st.stop()
+    result = analyze(text)  # the message is never saved or logged
     urg = result["urgency"]
     probs = urg.get("probs", {})
     p_imm = probs.get("immediate_danger", 0.0)
-    show_112 = urg["label"] == "immediate_danger" or p_imm >= t112
+    safety = result.get("safety", {})
+    show_112 = (
+        safety.get("rule_fired", False)
+        or urg["label"] == "immediate_danger"
+        or p_imm >= t112
+    )
 
     # 1) Call 112 FIRST, above the title and disclaimer.
     if show_112:
@@ -235,6 +210,10 @@ if submitted:
     st.divider()
     st.subheader("What Sakhi understood")
     st.markdown(f"**Urgency:** {URGENCY_TEXT.get(urg['label'], urg['label'])}")
+    if safety.get("caring_message"):
+        st.info(safety["caring_message"])
+    for contact in safety.get("contacts", []):
+        render_contact(contact["key"])
 
     if low_conf:
         # 2) Safe fallback.
@@ -249,7 +228,9 @@ if submitted:
         # 3) Retrieved law, shown via the fixed template.
         st.subheader("Relevant provisions")
         provisions = result.get("provisions", [])
-        if provisions:
+        if safety.get("skip_legal_explanation"):
+            st.info("Legal explanations are skipped while crisis support is the priority.")
+        elif provisions:
             for p in provisions:
                 st.markdown(PROVISION_TEMPLATE.format(act=p["act"], section=p["section"]))
                 with st.expander("Official text"):

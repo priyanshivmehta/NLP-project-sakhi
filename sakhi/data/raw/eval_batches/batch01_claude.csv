@@ -1,0 +1,41 @@
+text,language,perspective,situation_labels,urgency
+बस में दो लड़के मेरे पीछे पीछे उतरे हैं अभी स्टॉप पर अंधेरा है कोई नहीं है प्लीज़ मदद,hi,first,"street_harassment|stalking",immediate_danger
+hostel gate ke bahar wo bike wala abhi bhi khada hai mera naam leke bula raha hai mai andar akeli hu warden nhi hai,hinglish,first,stalking,immediate_danger
+my roommate just called crying her brother is outside our hostel drunk and says he will drag her home tonight she is hiding in the washroom,en,third,domestic_violence,immediate_danger
+meri friend ko cab driver ne sunsaan road pe utar diya hai aur gaadi peeche peeche la raha hai wo phone pe dar ke ro rahi hai,hinglish,third,"stalking|street_harassment",immediate_danger
+एक लड़का रोज़ कॉलेज के गेट से मेरा पीछा करता है आज उसने कहा कि कल भी देखेगा डर लग रहा है,hi,first,stalking,urgent
+मेरी सहेली की फोटो किसी ने एडिट करके ग्रुप में डाल दी और कहता है पैसे दे वरना सबको भेज दूँगा कल तक का टाइम दिया है,hi,third,cyber_abuse,urgent
+इंटर्नशिप में मेरा मैनेजर रोज़ रात को मैसेज करता है और मना करने पर प्रोजेक्ट से निकालने की बात करता है,hi,first,workplace_harassment,urgent
+मेरी दीदी के ससुराल वाले हर हफ्ते कार और पैसे की माँग करते हैं और मना करने पर उसका खाना बंद कर देते हैं,hi,third,"dowry_harassment|domestic_violence",urgent
+पति और सास रोज़ दहेज के ताने देते हैं कल रात पति ने धक्का भी दिया अब मायके जाना चाहती हूँ पर डर है,hi,first,"domestic_violence|dowry_harassment",urgent
+bus me roz ek banda same stop pe chadta hai aur bagal me aake khada hota hai aaj uska number maanga kal phir aayega,hinglish,first,"street_harassment|stalking",urgent
+ex ne mere sab friends ko msg kiya ki mai buri ladki hu ab fake id se roz dm kar raha hai bohot tang aa gayi hu,hinglish,first,"cyber_abuse|stalking",urgent
+mere hostel ke senior ne meri friend ko kamre me bulake galat tarike se chhua aur bol raha hai kisi ko bataya to marks kharab kar dega,hinglish,third,"sexual_violence|other",urgent
+internship wale sir late night call karte hai aur bolte hai nhi uthaya to report kharab likhunga,hinglish,first,workplace_harassment,urgent
+meri bua ki beti ko uska pati roz peeta hai aur phone chhin liya hai wo kal chupke se ek baar call kar payi,hinglish,third,domestic_violence,urgent
+papa roz mummy pe haath uthate hai mai hostel se ghar aayi hu aaj bole ghar se nikaal denge dono ko,hinglish,third,domestic_violence,urgent
+a guy from my class keeps waiting outside the girls hostel every evening and today he said he knows my room number,en,first,stalking,urgent
+someone made a fake profile with my pics and is messaging my classmates and now says he will post my number if i report him,en,first,cyber_abuse,urgent
+my friends lab guide keeps asking her to stay back alone after hours and said her thesis wont get signed unless she agrees,en,third,workplace_harassment,urgent
+my sister's in laws took her phone and want more gold from our parents before diwali or they wont let her come home,en,third,"dowry_harassment|domestic_violence",urgent
+same group of boys on my bus route pass comments and block the aisle every morning this week,en,first,street_harassment,urgent
+आज बस में किसी ने भद्दा कमेंट मारा मैं अगले स्टॉप पर उतर गई बस मन खराब है समझ नहीं आ रहा कुछ करना चाहिए या नहीं,hi,first,street_harassment,non_urgent
+हॉस्टल की वार्डन हमारी सहेली को शाम 7 बजे के बाद बाहर नहीं जाने देती और घर वालों को सब बता देती है क्या ये सही है,hi,third,other,non_urgent
+इंस्टा पर किसी अनजान ने गंदा मैसेज भेजा मैंने ब्लॉक कर दिया अब बस सोच रही हूँ रिपोर्ट करूँ या छोड़ दूँ,hi,first,cyber_abuse,non_urgent
+हमारे सर लड़कियों से बात करते समय बहुत पास आकर खड़े होते हैं आज एक लड़की बहुत असहज हो गई थी,hi,third,other,non_urgent
+कुछ महीने पहले एक पार्टी में मेरे साथ गलत हुआ था अब तक किसी को नहीं बताया क्या अब भी कुछ हो सकता है,hi,first,sexual_violence,non_urgent
+aaj auto me driver ne bahut ghur ke dekha mai utar gayi kuch hua nhi par ajeeb laga should i do something,hinglish,first,street_harassment,non_urgent
+fest me ek senior ne meri friend ke kapdo pe comment maara bas ek baar hua par wo kaafi upset hai,hinglish,third,other,non_urgent
+kisi ne meri purani pic story pe daali thi ab delete ho gayi par dar lag raha hai ki phir na aaye,hinglish,first,cyber_abuse,non_urgent
+my hostel curfew is strict for girls but not boys and the warden shouted at me today in front of everyone is this ok,en,first,other,non_urgent
+my cousin told me something happened to her years ago at a relatives place and she asks if telling someone now would still help,en,third,sexual_violence,non_urgent
+my senior at the part time job joked about my body once i laughed it off but it keeps bothering me,en,first,workplace_harassment,non_urgent
+a stranger on the bus took my photo and smirked then got off at the next stop i dont know if i should do anything,en,first,"street_harassment|cyber_abuse",non_urgent
+अगर पति मारता है तो थाने जाने से पहले क्या करना चाहिए मुझे कुछ पता नहीं,hi,first,domestic_violence,info_seeking
+ऑफिस में बॉस गलत बातें करे तो शिकायत कहाँ करते हैं,hi,first,workplace_harassment,info_seeking
+कोई मेरी फोटो ऑनलाइन डाल दे तो उसे हटवाने का तरीका क्या है,hi,first,cyber_abuse,info_seeking
+agar koi college ke bahar roz follow kare to kisko batana chahiye aur proof kaise rakhu,hinglish,first,stalking,info_seeking
+shaadi ke baad sasural wale paise maange to kya ye galat hai mujhe kya rights hai,hinglish,first,dowry_harassment,info_seeking
+agar kisi ke saath galat touch hua ho to sabse pehle kya karna chahiye doctor ya police batao,hinglish,first,sexual_violence,info_seeking
+can i stay at a shelter if my husband hits me and i have no money,en,first,domestic_violence,info_seeking
+how do i report someone who keeps sending me obscene messages on instagram and what proof do i need,en,first,cyber_abuse,info_seeking

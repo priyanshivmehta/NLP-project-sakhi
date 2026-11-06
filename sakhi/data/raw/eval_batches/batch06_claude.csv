@@ -1,0 +1,41 @@
+text,language,perspective,situation_labels,urgency
+mujhe ghar me kamre me band kar diya saas pati maar rahe hai abhi bacha lo pls,hinglish,first,domestic_violence,immediate_danger
+ek aadmi mere peeche pad gaya hai sunsan raste pe abhi peeche aa raha hai jaldi madad bhejo,hinglish,first,stalking|street_harassment,immediate_danger
+"मेरी बेटी को उसके ससुराल वाले अभी छत से फेंकने की धमकी दे रहे हैं जल्दी पुलिस भेजो",hi,third,domestic_violence|dowry_harassment,immediate_danger
+My husband locked me in kitchen and opening gas cylinder right now please send emergency help,en,first,domestic_violence,immediate_danger
+pati aur saas roz dahej ke liye taane marte hai aur kal raat khana nahi diya bola ghar se nikal ja,hinglish,first,domestic_violence|dowry_harassment,urgent
+mere sasur aur pati har roz bike ke liye beti ko marte hai aur bolte hai baap se cash laa,hinglish,third,domestic_violence|dowry_harassment,urgent
+college jaate waqt ek ladka roz mera rasta rokta hai aur bolta hai baat nahi ki toh tezaab phenk dunga,hinglish,first,stalking|street_harassment,urgent
+mere office ka prabandhak roz der tak rokta hai aur keh raha hai sath nahi chali toh job se nikal dega,hinglish,first,workplace_harassment,urgent
+ek unknown number se mere phone pe kharab photo aa rahe hai aur bol raha hai paise do nahi toh viral kar dunga,hinglish,first,cyber_abuse,urgent
+meri behen ko uska ex husband roz fone karke dhamkata hai aur ghar ke bahar chakkar kat-ta hai,hinglish,third,stalking|cyber_abuse,urgent
+"मारे पति रोज शराब पीके मोहे मारते है और कहत है मायके से और पैसा लाओ बहुत डर लगत है",hi,first,domestic_violence|dowry_harassment,urgent
+"ससुराल वाले मेरी बेटी को कमरे में बंद करके भूखा रखते हैं और गाड़ी की मांग कर रहे हैं",hi,third,domestic_violence|dowry_harassment,urgent
+"हमारे पड़ोस का आदमी मेरी बहू पर गलत नजर रखता है और अकेले पाके घर में घुसने की कोशिश करता है",hi,third,sexual_violence|other,urgent
+"बस का ड्राइवर रोज मुझे गलत तरीके से छूने की कोशिश करता है और मना करने पर बस से उतारने की धमकी देता है",hi,first,sexual_violence|street_harassment,urgent
+My in laws are continuously harassing my sister for golden chain and beating her every evening,en,third,domestic_violence|dowry_harassment,urgent
+My ex classmate is constantly following me to my computer coaching institute and threatening me,en,first,stalking,urgent
+An unknown user is blackmailing my daughter online and demanding money by tomorrow morning,en,third,cyber_abuse,urgent
+My landlord comes to my room late night without permission and speaks very rudely to me,en,first,other,urgent
+"मेरी ननद का पति उसे रोज पीटता है और मायके से बैंक में पैसे ट्रांसफर करवाने को कहता है",hi,third,domestic_violence|dowry_harassment,urgent
+"Sir, my landlord threw my belongings outside and is not letting me enter the house tonight",en,first,other,urgent
+pichle hafte bazaar me ek ladke ne gaali di thi ab wo nahi dikha par dar lag raha hai,hinglish,first,street_harassment,non_urgent
+pichle mahine sasural me shadi ke kharche ko lekar jhagra hua tha aur pati ne thappad mara tha,hinglish,first,domestic_violence|dowry_harassment,non_urgent
+meri saheli ke sath do din pehle bus me ek aadmi ne badtameezi ki thi ab kya kar sakte hai,hinglish,third,street_harassment,non_urgent
+ek mahine pehle ek number se gande message aaye the ab band ho gaye hai,hinglish,first,cyber_abuse,non_urgent
+"कल शाम बाजार में दो लड़कों ने मुझ पर फब्तियां कसी थीं क्या इसकी शिकायत कर सकते हैं",hi,first,street_harassment,non_urgent
+"पिछले महीने ऑफिस के मैनेजर ने मेरी बेटी पर गलत टिप्पणी की थी अब वो जॉब छोड़ चुकी है",hi,third,workplace_harassment,non_urgent
+"पुराने मकान मालिक ने जमा राशि वापस देने से मना कर दिया और बहस की थी तीन हफ्ते पहले",hi,first,other,non_urgent
+"मेरी ननद को कुछ दिन पहले उनके ससुराल वालों ने दहेज के लिए ताना मारा था",hi,third,dowry_harassment,non_urgent
+"Last month a delivery person asked my sister weird personal questions, no contact after that",en,third,cyber_abuse|other,non_urgent
+"Two weeks ago my husband pushed me hard during argument, now everything is quiet but feeling unsafe",en,first,domestic_violence,non_urgent
+"A colleague at work spoke rudely to my daughter ten days back, just wanted to check if reportable",en,third,workplace_harassment,non_urgent
+Few days back auto driver asked extra money from my cousin and argued badly on road,en,third,other,non_urgent
+kya dahej ke khilaf complaint karne ke liye paise lagte hai kripya bataye,hinglish,first,dowry_harassment,info_seeking
+pati agar ghar se nikal de toh mahila helpline number kya hai,hinglish,first,domestic_violence,info_seeking
+"घरेलू हिंसा की शिकायत दर्ज कराने का आसान तरीका क्या है कृपया बताएं",hi,first,domestic_violence,info_seeking
+"अगर सड़क पर कोई आदमी रोज घूरता है तो कहां फोन करना चाहिए",hi,first,street_harassment,info_seeking
+"साइबर क्राइम में ऑनलाइन फोटो लीक की शिकायत कैसे होती है",hi,first,cyber_abuse,info_seeking
+What is the legal step if someone is secretly stalking my sister on her way to college,en,third,stalking,info_seeking
+Is there any government helpline to get legal advice for domestic problems free of cost,en,first,other,info_seeking
+"क्या ऑफिस में होने वाली परेशानी की शिकायत गुप्त रूप से दर्ज कराई जा सकती है",hi,first,workplace_harassment,info_seeking

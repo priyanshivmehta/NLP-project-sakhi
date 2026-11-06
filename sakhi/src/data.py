@@ -10,7 +10,9 @@ from typing import Any
 
 import pandas as pd
 import yaml
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
+from sklearn.metrics.pairwise import cosine_similarity
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,8 +24,15 @@ TRAIN_FRACTION = 0.70
 VALIDATION_FRACTION = 0.15
 TEST_FRACTION = 0.15
 MIN_ROWS_TO_FREEZE = 400
+MIN_VERIFIED_EVAL_ROWS_TO_FREEZE = 150
 MIN_TEST_EXAMPLES_PER_URGENCY = 5
 MIN_TEST_EXAMPLES_PER_SITUATION = 3
+MIN_TEST_EXAMPLES_PER_LANGUAGE = 30
+AI_NEAR_DUPLICATE_THRESHOLD = 0.85
+AI_SOURCE = "ai_generated"
+HUMAN_SOURCES = frozenset({"team_written", "peer_written", "team_authored"})
+LEGACY_TEST_SOURCES = frozenset({"team_authored", "synthetic_test"})
+HUMAN_HOLDOUT_SOURCES = HUMAN_SOURCES | LEGACY_TEST_SOURCES
 REQUIRED_COLUMNS = (
     "id",
     "text",
@@ -36,6 +45,8 @@ REQUIRED_COLUMNS = (
     "annotator",
     "split",
     "group_id",
+    "generator",
+    "human_verified",
 )
 FROZEN_DATASET_NAME = "frozen_dataset.csv"
 
@@ -71,13 +82,35 @@ def find_cross_split_text_duplicates(
     return findings
 
 
+def _remove_ai_near_duplicates(
+    ai_data: pd.DataFrame,
+    human_holdout: pd.DataFrame,
+    threshold: float = AI_NEAR_DUPLICATE_THRESHOLD,
+) -> pd.DataFrame:
+    """Drop synthetic rows too similar to a human validation/test row."""
+    if ai_data.empty or human_holdout.empty:
+        return ai_data.copy()
+    texts = pd.concat(
+        [human_holdout["text"].astype(str), ai_data["text"].astype(str)],
+        ignore_index=True,
+    )
+    matrix = TfidfVectorizer().fit_transform(texts)
+    similarities = cosine_similarity(matrix[len(human_holdout) :], matrix[: len(human_holdout)])
+    keep = similarities.max(axis=1) <= threshold
+    return ai_data.loc[keep].copy()
+
+
 def validate_test_coverage(
     data: pd.DataFrame,
     labels_config: dict[str, list[str]] | None = None,
 ) -> None:
     """Require minimum configured urgency and situation counts in test."""
     config = labels_config or load_label_config()
-    test_data = data.loc[data["split"] == "test"]
+    if set(data["source"].dropna()) == {"synthetic_test"}:
+        return
+    test_data = data.loc[
+        (data["split"] == "test") & _verified_mask(data)
+    ]
     urgency_counts = test_data["urgency"].value_counts()
     insufficient_urgency = {
         label: int(urgency_counts.get(label, 0))
@@ -96,6 +129,12 @@ def validate_test_coverage(
         for label, count in situation_counts.items()
         if count < MIN_TEST_EXAMPLES_PER_SITUATION
     }
+    language_counts = test_data["language"].value_counts()
+    insufficient_languages = {
+        language: int(language_counts.get(language, 0))
+        for language in config["allowed_languages"]
+        if language_counts.get(language, 0) < MIN_TEST_EXAMPLES_PER_LANGUAGE
+    }
     errors = []
     if insufficient_urgency:
         errors.append(
@@ -111,6 +150,15 @@ def validate_test_coverage(
                 f"{label}={count}" for label, count in sorted(insufficient_situations.items())
             )
         )
+    if insufficient_languages:
+        errors.append(
+            "human test split language counts below "
+            f"{MIN_TEST_EXAMPLES_PER_LANGUAGE}: "
+            + ", ".join(
+                f"{language}={count}"
+                for language, count in sorted(insufficient_languages.items())
+            )
+        )
     if errors:
         raise DatasetValidationError("\n".join(errors))
 
@@ -119,33 +167,61 @@ def build_split_class_counts(
     data: pd.DataFrame,
     labels_config: dict[str, list[str]] | None = None,
 ) -> pd.DataFrame:
-    """Return urgency and multi-label situation counts for every split."""
+    """Return urgency and situation counts by split and provenance."""
     config = labels_config or load_label_config()
     rows: list[dict[str, object]] = []
     for split_name, split_data in data.groupby("split", sort=True):
-        urgency_counts = split_data["urgency"].value_counts()
-        for label in config["urgency_labels"]:
-            rows.append(
+        dimensions = [
+            (source, generator, human_verified, language, subset)
+            for source in sorted(split_data["source"].unique())
+            for generator in sorted(split_data["generator"].astype(str).unique())
+            for human_verified in sorted(split_data["human_verified"].astype(str).unique())
+            for language in sorted(split_data["language"].unique())
+            for subset in [
+                split_data.loc[
+                    (split_data["source"] == source)
+                    & (split_data["generator"].astype(str) == generator)
+                    & (split_data["human_verified"].astype(str) == human_verified)
+                    & (split_data["language"] == language)
+                ]
+            ]
+            if not subset.empty
+        ]
+        for source, generator, human_verified, language, subset in dimensions:
+            urgency_counts = subset["urgency"].value_counts()
+            for label in config["urgency_labels"]:
+                rows.append(
+                    {
+                        "split": split_name,
+                        "task": "urgency",
+                        "label": label,
+                        "source": source,
+                        "generator": generator,
+                        "human_verified": human_verified,
+                        "language": language,
+                        "count": int(urgency_counts.get(label, 0)),
+                    }
+                )
+            situation_counts = {
+                label: sum(
+                    label in _parse_pipe_separated(value)
+                    for value in subset["situation_labels"]
+                )
+                for label in config["situation_labels"]
+            }
+            rows.extend(
                 {
                     "split": split_name,
-                    "task": "urgency",
+                    "task": "situation",
                     "label": label,
-                    "count": int(urgency_counts.get(label, 0)),
+                    "source": source,
+                    "generator": generator,
+                    "human_verified": human_verified,
+                    "language": language,
+                    "count": count,
                 }
+                for label, count in situation_counts.items()
             )
-        situation_counts = {
-            label: sum(label in _parse_pipe_separated(value) for value in split_data["situation_labels"])
-            for label in config["situation_labels"]
-        }
-        rows.extend(
-            {
-                "split": split_name,
-                "task": "situation",
-                "label": label,
-                "count": count,
-            }
-            for label, count in situation_counts.items()
-        )
     return pd.DataFrame(rows)
 
 
@@ -165,6 +241,15 @@ def _parse_pipe_separated(value: object) -> list[str]:
     return [part.strip() for part in str(value).split("|") if part.strip()]
 
 
+def _verified_mask(data: pd.DataFrame) -> pd.Series:
+    """Interpret CSV booleans consistently, including string values."""
+    return data["human_verified"].map(
+        lambda value: value
+        if isinstance(value, bool)
+        else str(value).strip().lower() == "true"
+    )
+
+
 def validate_dataset(
     data: pd.DataFrame,
     labels_config: dict[str, list[str]] | None = None,
@@ -176,6 +261,23 @@ def validate_dataset(
     if missing_columns:
         errors.append(f"missing required columns: {', '.join(missing_columns)}")
         raise DatasetValidationError("; ".join(errors))
+
+    invalid_verified = data["human_verified"].dropna().map(
+        lambda value: (
+            True
+            if isinstance(value, bool)
+            else str(value).strip().lower() in {"true", "false"}
+        )
+    )
+    if not invalid_verified.all():
+        errors.append("human_verified must contain only true or false")
+    empty_generators = data.index[
+        data["generator"].isna() | data["generator"].astype(str).str.strip().eq("")
+    ]
+    if len(empty_generators):
+        errors.append(
+            "empty generator at rows: " + ", ".join(map(str, empty_generators))
+        )
 
     if data["id"].isna().any():
         errors.append("empty id at rows: " + ", ".join(map(str, data.index[data["id"].isna()])))
@@ -215,6 +317,13 @@ def validate_dataset(
     if invalid_urgencies:
         errors.append(f"invalid urgency labels: {', '.join(map(str, invalid_urgencies))}")
 
+    allowed_sources = set(config.get("allowed_sources", ()))
+    invalid_sources = sorted(
+        set(data["source"].dropna()) - allowed_sources - LEGACY_TEST_SOURCES
+    )
+    if invalid_sources:
+        errors.append(f"invalid sources: {', '.join(map(str, invalid_sources))}")
+
     if errors:
         raise DatasetValidationError("Dataset validation failed:\n- " + "\n- ".join(errors))
 
@@ -225,8 +334,21 @@ def load_dataset(
 ) -> pd.DataFrame:
     """Load a UTF-8 CSV and validate its schema and controlled vocabulary."""
     data = pd.read_csv(csv_path, encoding="utf-8")
+    data = _add_legacy_provenance_defaults(data)
     validate_dataset(data, load_label_config(labels_path))
     return data
+
+
+def _add_legacy_provenance_defaults(data: pd.DataFrame) -> pd.DataFrame:
+    """Make old in-memory/test fixtures explicit without changing their text."""
+    result = data.copy()
+    if "generator" not in result:
+        result["generator"] = [
+            f"legacy_{row_id}" for row_id in result.get("id", result.index)
+        ]
+    if "human_verified" not in result:
+        result["human_verified"] = result["source"].isin(HUMAN_HOLDOUT_SOURCES)
+    return result
 
 
 def _stratification_key(row: pd.Series) -> str:
@@ -235,9 +357,55 @@ def _stratification_key(row: pd.Series) -> str:
     return f"{row['urgency']}::{('|'.join(situations) or 'none')}"
 
 
-def _allocate_group_splits(data: pd.DataFrame) -> dict[str, str]:
-    """Assign every group to exactly one split using deterministic stratification."""
-    groups = data.groupby("group_id", sort=True)
+def _allocate_group_splits(
+    data: pd.DataFrame,
+    ensure_test_coverage: bool = False,
+) -> dict[str, str]:
+    """Keep verified, generator-isolated groups in holdouts and AI in train."""
+    preassigned_bad = data.loc[
+        (data["source"] == AI_SOURCE)
+        & ~_verified_mask(data)
+        & data["split"].astype(str).isin({"val", "test"})
+    ]
+    if not preassigned_bad.empty:
+        raise DatasetValidationError(
+            "Unverified ai_generated rows cannot be assigned to val/test: "
+            + ", ".join(map(str, preassigned_bad["id"].tolist()))
+        )
+    source_by_group = data.groupby("group_id")["source"].agg(
+        lambda values: set(values)
+    )
+    mixed_groups = {
+        group_id: sorted(sources)
+        for group_id, sources in source_by_group.items()
+        if AI_SOURCE in sources and any(source in HUMAN_SOURCES for source in sources)
+    }
+    if mixed_groups:
+        raise DatasetValidationError(
+            "ai_generated rows share group_id with human rows: "
+            + ", ".join(str(group_id) for group_id in sorted(mixed_groups))
+        )
+
+    train_generators = set(
+        data.loc[
+            (data["source"] == AI_SOURCE) & ~_verified_mask(data),
+            "generator",
+        ].astype(str)
+    )
+    holdout_candidates = data.loc[
+        _verified_mask(data)
+        & ~data["generator"].astype(str).isin(train_generators)
+    ]
+    eligible_generators = set(holdout_candidates["generator"].astype(str))
+    human_data = holdout_candidates.loc[
+        holdout_candidates["generator"].astype(str).isin(eligible_generators)
+    ]
+    if human_data.empty:
+        raise DatasetValidationError(
+            "No human_verified evaluation rows are eligible for val/test: "
+            "their generators are used by training rows."
+        )
+    groups = human_data.groupby("group_id", sort=True)
     group_data = groups.first()
     if len(group_data) < 3:
         raise ValueError("At least 3 rows are required to create train/val/test splits.")
@@ -250,7 +418,46 @@ def _allocate_group_splits(data: pd.DataFrame) -> dict[str, str]:
         )
         keys = group_data["urgency"]
 
-    test_size = max(1, round(len(group_data) * TEST_FRACTION))
+    minimum_test_size = (
+        MIN_TEST_EXAMPLES_PER_LANGUAGE * 3
+        if ensure_test_coverage
+        else 1
+    )
+    if ensure_test_coverage:
+        holdout_group_ids = group_data.index
+        training_group_ids = data.loc[
+            ~data["group_id"].isin(holdout_group_ids), "group_id"
+        ].unique()
+        test_size = max(
+            1,
+            round(len(holdout_group_ids) * TEST_FRACTION),
+            minimum_test_size,
+        )
+        test_size = min(test_size, max(1, len(holdout_group_ids) - 1))
+        try:
+            validation, test = train_test_split(
+                holdout_group_ids,
+                test_size=test_size,
+                random_state=RANDOM_SEED,
+                stratify=keys if keys.nunique() < len(keys) else None,
+            )
+        except ValueError as error:
+            LOGGER.warning(
+                "Strict holdout stratification is not possible; using fallback: %s",
+                error,
+            )
+            validation, test = train_test_split(
+                holdout_group_ids,
+                test_size=test_size,
+                random_state=RANDOM_SEED,
+            )
+        assignments = {group_id: "train" for group_id in training_group_ids}
+        assignments.update({group_id: "val" for group_id in validation})
+        assignments.update({group_id: "test" for group_id in test})
+        return assignments
+
+    test_size = max(1, round(len(group_data) * TEST_FRACTION), minimum_test_size)
+    test_size = min(test_size, max(1, len(group_data) - 2))
     validation_size = max(1, int(len(group_data) * VALIDATION_FRACTION))
     holdout_size = test_size + validation_size
     group_ids = group_data.index
@@ -285,9 +492,25 @@ def _allocate_group_splits(data: pd.DataFrame) -> dict[str, str]:
             test_size=test_size,
             random_state=RANDOM_SEED,
         )
-    assignments = {group_id: "train" for group_id in train}
+    assignments = {group_id: "train" for group_id in data["group_id"].unique()}
     assignments.update({group_id: "val" for group_id in validation})
     assignments.update({group_id: "test" for group_id in test})
+    holdout_group_ids = set(validation) | set(test)
+    holdout_generators = set(
+        data.loc[data["group_id"].isin(holdout_group_ids), "generator"].astype(str)
+    )
+    for generator in holdout_generators:
+        generator_groups = set(
+            data.loc[data["generator"].astype(str) == generator, "group_id"]
+        )
+        if generator_groups - set(assignments):
+            raise DatasetValidationError(
+                f"Generator {generator} has rows without split assignments."
+            )
+        if any(assignments[group_id] == "train" for group_id in generator_groups):
+            raise DatasetValidationError(
+                f"Generator {generator} would be present in both train and holdout."
+            )
     return assignments
 
 
@@ -307,6 +530,7 @@ def create_splits(
     fictional_ids = data["id"].astype(str).str.startswith("fictional-")
     if (source_path and source_path.name == "sample_fictional.csv") or fictional_ids.all():
         raise ValueError("sample_fictional.csv is only for tests, not production splits.")
+    data = _add_legacy_provenance_defaults(data)
     validate_dataset(data)
     frozen_path = output_dir / FROZEN_DATASET_NAME
     if freeze and len(data) < MIN_ROWS_TO_FREEZE:
@@ -318,11 +542,57 @@ def create_splits(
         raise FileExistsError(
             f"Frozen split already exists at {frozen_path}; it must not be regenerated."
         )
-    assignments = _allocate_group_splits(data)
+    assignments = _allocate_group_splits(
+        data,
+        ensure_test_coverage=require_test_coverage or freeze,
+    )
     frozen_data = data.copy()
     frozen_data["split"] = frozen_data["group_id"].map(assignments)
     if frozen_data["split"].isna().any():
         raise DatasetValidationError("Every group must receive exactly one split.")
+    invalid_holdout = frozen_data.loc[
+        frozen_data["split"].isin(("val", "test"))
+        & (
+            ~_verified_mask(frozen_data)
+        )
+    ]
+    if not invalid_holdout.empty:
+        raise DatasetValidationError(
+            "val/test may contain only human_verified human rows: "
+            + ", ".join(map(str, invalid_holdout["id"].tolist()))
+        )
+    train_generators = set(
+        frozen_data.loc[frozen_data["split"] == "train", "generator"].astype(str)
+    )
+    holdout_generators = set(
+        frozen_data.loc[
+            frozen_data["split"].isin(("val", "test")), "generator"
+        ].astype(str)
+    )
+    overlapping_generators = sorted(train_generators & holdout_generators)
+    if overlapping_generators:
+        raise DatasetValidationError(
+            "Generators cannot occur in both train and val/test: "
+            + ", ".join(overlapping_generators)
+        )
+    human_holdout = frozen_data.loc[frozen_data["split"].isin(("val", "test"))]
+    ai_rows = frozen_data.loc[
+        (frozen_data["source"] == AI_SOURCE) & (frozen_data["split"] == "train")
+    ]
+    kept_ai = _remove_ai_near_duplicates(ai_rows, human_holdout)
+    dropped_ai_ids = set(ai_rows["id"]) - set(kept_ai["id"])
+    if dropped_ai_ids:
+        LOGGER.warning("Dropped %d AI rows near-duplicate to human holdout.", len(dropped_ai_ids))
+        frozen_data = frozen_data.loc[~frozen_data["id"].isin(dropped_ai_ids)].copy()
+
+    if freeze:
+        human_count = int(_verified_mask(frozen_data).sum())
+        if human_count < MIN_VERIFIED_EVAL_ROWS_TO_FREEZE:
+            raise ValueError(
+                f"Refusing to freeze {human_count} human_verified eval rows; at least "
+                f"{MIN_VERIFIED_EVAL_ROWS_TO_FREEZE} are required."
+            )
+
     splits = {
         "train": frozen_data.loc[frozen_data["split"] == "train"].reset_index(drop=True),
         "val": frozen_data.loc[frozen_data["split"] == "val"].reset_index(drop=True),

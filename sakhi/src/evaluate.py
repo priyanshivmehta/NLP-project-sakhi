@@ -35,6 +35,9 @@ from sakhi.src.train_baseline import (
 LOGGER = logging.getLogger(__name__)
 RESULTS_DIR = PROJECT_ROOT / "sakhi" / "reports" / "results"
 LABELS_PATH = PROJECT_ROOT / "sakhi" / "config" / "labels.yaml"
+VERIFIED_SYNTHETIC_LABEL = (
+    "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+)
 
 
 def load_labels() -> dict[str, list[str]]:
@@ -69,6 +72,21 @@ def evaluate_frames(
     urgency_predictions, situation_predictions = _predict(artifacts, data)
     urgency_true = data["urgency"].to_numpy()
     situation_true = _situation_targets(data, situation_labels)
+    verified_synthetic = (
+        not data.empty
+        and set(data["source"]) == {"ai_generated"}
+        and "human_verified" in data
+        and data["human_verified"].astype(bool).all()
+    )
+    quality = (
+        VERIFIED_SYNTHETIC_LABEL
+        if verified_synthetic
+        else (
+            "SYNTHETIC, NOT A REAL RESULT"
+            if not data.empty and set(data["source"]) == {"ai_generated"}
+            else "HUMAN_OR_MIXED"
+        )
+    )
 
     urgency_precision, urgency_recall, urgency_f1, urgency_support = (
         precision_recall_fscore_support(
@@ -95,6 +113,7 @@ def evaluate_frames(
                 "recall": recall,
                 "f1": f1,
                 "support": int(support),
+                "data_quality": quality,
             }
         )
     rows.append(
@@ -104,6 +123,7 @@ def evaluate_frames(
             "label": "macro_avg",
             "f1": f1_score(urgency_true, urgency_predictions, labels=urgency_labels, average="macro", zero_division=0),
             "support": int(len(data)),
+            "data_quality": quality,
         }
     )
 
@@ -131,6 +151,7 @@ def evaluate_frames(
                 "recall": recall,
                 "f1": f1,
                 "support": int(support),
+                "data_quality": quality,
             }
         )
     rows.extend(
@@ -141,6 +162,7 @@ def evaluate_frames(
                 "label": "macro_avg",
                 "f1": f1_score(situation_true, situation_predictions, average="macro", zero_division=0),
                 "support": int(situation_true.sum()),
+                "data_quality": quality,
             },
             {
                 "task": "situation",
@@ -148,6 +170,7 @@ def evaluate_frames(
                 "label": "micro_avg",
                 "f1": f1_score(situation_true, situation_predictions, average="micro", zero_division=0),
                 "support": int(situation_true.sum()),
+                "data_quality": quality,
             },
             {
                 "task": "situation",
@@ -155,9 +178,94 @@ def evaluate_frames(
                 "label": "subset_accuracy",
                 "f1": accuracy_score(situation_true, situation_predictions),
                 "support": int(len(data)),
+                "data_quality": quality,
             },
         ]
     )
+    for language, language_data in data.groupby("language", sort=True):
+        language_urgency, language_situation = _predict(artifacts, language_data)
+        language_urgency_true = language_data["urgency"].to_numpy()
+        language_situation_true = _situation_targets(language_data, situation_labels)
+        language_quality = (
+            VERIFIED_SYNTHETIC_LABEL
+            if (
+                set(language_data["source"]) == {"ai_generated"}
+                and "human_verified" in language_data
+                and language_data["human_verified"].astype(bool).all()
+            )
+            else (
+                "SYNTHETIC, NOT A REAL RESULT"
+                if set(language_data["source"]) == {"ai_generated"}
+                else "HUMAN_OR_MIXED"
+            )
+        )
+        rows.append(
+            {
+                "task": "urgency",
+                "metric_scope": "per_language",
+                "label": language,
+                "f1": f1_score(
+                    language_urgency_true,
+                    language_urgency,
+                    labels=urgency_labels,
+                    average="macro",
+                    zero_division=0,
+                ),
+                "support": int(len(language_data)),
+                "data_quality": language_quality,
+            }
+        )
+        for index, label in enumerate(situation_labels):
+            rows.append(
+                {
+                    "task": "situation",
+                    "metric_scope": "per_language_label",
+                    "label": f"{language}:{label}",
+                    "f1": f1_score(
+                        language_situation_true[:, index],
+                        language_situation[:, index],
+                        zero_division=0,
+                    ),
+                    "support": int(language_situation_true[:, index].sum()),
+                    "data_quality": language_quality,
+                }
+            )
+    if "noisy" in data:
+        for noisy, subset in data.groupby(data["noisy"].astype(bool), sort=True):
+            subset_urgency, subset_situation = _predict(artifacts, subset)
+            subset_true_urgency = subset["urgency"].to_numpy()
+            subset_true_situation = _situation_targets(subset, situation_labels)
+            rows.extend(
+                [
+                    {
+                        "task": "combined",
+                        "metric_scope": "noisy" if noisy else "clean",
+                        "label": "urgency_macro_f1",
+                        "f1": f1_score(
+                            subset_true_urgency,
+                            subset_urgency,
+                            labels=urgency_labels,
+                            average="macro",
+                            zero_division=0,
+                        ),
+                        "support": int(len(subset)),
+                        "data_quality": quality,
+                    },
+                    {
+                        "task": "combined",
+                        "metric_scope": "noisy" if noisy else "clean",
+                        "label": "situation_macro_f1",
+                        "f1": f1_score(
+                            subset_true_situation,
+                            subset_situation,
+                            average="macro",
+                            zero_division=0,
+                        ),
+                        "support": int(len(subset)),
+                        "data_quality": quality,
+                    },
+                ]
+            )
     metrics = pd.DataFrame(rows)
     metrics.to_csv(output_dir / f"{result_label}_metrics.csv", index=False)
     confusion = confusion_matrix(urgency_true, urgency_predictions, labels=urgency_labels)

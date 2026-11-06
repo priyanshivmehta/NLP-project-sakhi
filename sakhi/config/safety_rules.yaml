@@ -1,0 +1,86 @@
+rules:
+  immediate_danger:
+    any:
+      - weapon
+      - acid
+      - knife
+      - locked_in
+      - kidnapped
+      - taken_away
+    threat_with_now:
+      - threat
+  minor:
+    any:
+      - minor
+  self_harm:
+    any:
+      - self_harm
+
+patterns:
+  weapon:
+    - '\bweapon\b'
+    - '\bgun\b'
+    - '\bbandook\b'
+    - "हथियार"
+    - "बंदूक"
+  acid:
+    - '\bacid\b'
+    - '\btezab\b'
+    - "तेज़ाब"
+    - "तेजाब"
+  knife:
+    - '\bknife\b'
+    - '\bchaku\b'
+    - "चाकू"
+  locked_in:
+    - '\blocked\s+in\b'
+    - '\bband\s+karke\b'
+    - '\bband\s+kar\s+diya\b'
+    - "बंद कर"
+    - "बंद करके"
+  kidnapped:
+    - '\bkidnap'
+    - '\bkidnapped\b'
+    - '\butha\s+liya\b'
+    - "अपहरण"
+    - "उठा लिया"
+  taken_away:
+    - '\btaken\s+away\b'
+    - '\ble\s+gaye\b'
+    - '\ble\s+gayi\b'
+    - "ले गए"
+    - "ले गई"
+  threat:
+    - '\bthreat\b'
+    - '\bthreaten'
+    - '\bdhamki\b'
+    - "धमकी"
+  now:
+    - '\bright\s+now\b'
+    - '\bjust\s+now\b'
+    - '\babhi\b'
+    - '\babhi\s+ke\s+abhi\b'
+    - "अभी"
+    - "तुरंत"
+  minor:
+    - '\bminor\b'
+    - '\bchild\b'
+    - '\bchildren\b'
+    - '\bbachcha\b'
+    - '\bbacchi\b'
+    - '\bbacha\b'
+    - "नाबालिग"
+    - "बच्चा"
+    - "बच्ची"
+  self_harm:
+    - '\bsuicid'
+    - '\bkill\s+myself\b'
+    - '\bend\s+my\s+life\b'
+    - '\bself[-\s]?harm\b'
+    - '\bkhudkushi\b'
+    - '\bjaan\s+dena\b'
+    - "आत्महत्या"
+    - "खुदकुशी"
+
+messages:
+  self_harm_caring: "I am sorry you are going through this. You deserve immediate support. Please move away from anything you could use to hurt yourself and contact a trusted person or crisis support now."
