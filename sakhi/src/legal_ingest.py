@@ -40,6 +40,11 @@ SUPPORTED = {".txt", ".md", ".markdown", ".csv"}
 def _act_from_path(path: Path) -> str:
     stem = path.stem.upper().replace("_", "-").replace(" ", "-")
     aliases = {
+        "BNS-2023": "BNS",
+        "IT-2000": "IT",
+        "PWDVA-2005": "PWDVA-2005",
+        "POSH-2013": "POSH-2013",
+        "DPA-1961": "DPA-1961",
         "BNS": "BNS",
         "IT": "IT",
         "PWDVA": "PWDVA-2005",
@@ -63,16 +68,19 @@ def _read_source(path: Path) -> str:
 
 def _parse_file(path: Path) -> tuple[list[dict[str, str]], list[str]]:
     text = _read_source(path)
+    known_act = _act_from_path(path)
     act_match = ACT_RE.search(text)
-    act = act_match.group(1).strip() if act_match else _act_from_path(path)
+    act = known_act if known_act in {"BNS", "IT", "PWDVA-2005", "POSH-2013", "DPA-1961"} else (
+        act_match.group(1).strip() if act_match else known_act
+    )
     matches = list(SECTION_RE.finditer(text))
     if not matches:
         return [], [f"{path.name}: no section heading found"]
     chunks: list[dict[str, str]] = []
     unparsed: list[str] = []
     for index, match in enumerate(matches):
-        section_no = match.group(1).strip()
-        title = (match.group(2) or "").strip()
+        section_no = (match.group(1) or match.group(3) or "").strip()
+        title = (match.group(2) or match.group(4) or "").strip()
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         body = text[start:end].strip()
@@ -115,6 +123,12 @@ def ingest_sources(
             file_chunks, file_unparsed = [], [f"{path.name}: {error}"]
         chunks.extend(file_chunks)
         unparsed.extend(file_unparsed)
+    unique_chunks: dict[tuple[str, str], dict[str, str]] = {}
+    for chunk in chunks:
+        key = (chunk["act"], chunk["section_no"])
+        if key not in unique_chunks or len(chunk["text"]) > len(unique_chunks[key]["text"]):
+            unique_chunks[key] = chunk
+    chunks = list(unique_chunks.values())
     chunks_path.parent.mkdir(parents=True, exist_ok=True)
     frame = pd.DataFrame(chunks, columns=OUTPUT_COLUMNS)
     frame.to_csv(chunks_path, index=False, encoding="utf-8")

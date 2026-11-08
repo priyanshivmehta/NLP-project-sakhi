@@ -3,11 +3,7 @@ pandas>=2.0,<3
 numpy>=1.24,<3
 scikit-learn>=1.3,<2
 
-# Transformer training and multilingual retrieval
-torch>=2.1,<3
-transformers>=4.35,<5
-sentence-transformers>=2.2,<4
-faiss-cpu>=1.7,<2
+# Retrieval
 rank-bm25>=0.2,<1
 
 # Visualisation and app

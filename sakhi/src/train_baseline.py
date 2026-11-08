@@ -157,7 +157,24 @@ def train_from_frames(
     with (output_dir / "situation_thresholds.json").open("w", encoding="utf-8") as handle:
         json.dump(thresholds, handle, indent=2)
     with (output_dir / "model_metadata.json").open("w", encoding="utf-8") as handle:
-        json.dump({"situation_labels": situation_labels}, handle, indent=2)
+        json.dump(
+            {
+                "training_row_count": int(len(train_data)),
+                "urgency_labels": sorted(train_data["urgency"].astype(str).unique()),
+                "situation_labels": situation_labels,
+            },
+            handle,
+            indent=2,
+        )
+    print(f"Training file: in-memory frame ({len(train_data)} rows)")
+    print(f"Validation file: in-memory frame ({len(validation_data)} rows)")
+    print(f"Model directory: {output_dir}")
+    print(
+        "Model metadata: "
+        f"training_row_count={len(train_data)}, "
+        f"urgency_labels={sorted(train_data['urgency'].astype(str).unique())}, "
+        f"situation_labels={situation_labels}"
+    )
     return BaselineArtifacts(
         vectorizer=vectorizer,
         urgency_model=urgency_model,
@@ -175,6 +192,9 @@ def train_from_paths(
     """Load only train and validation CSVs and fit the baseline."""
     train_data = pd.read_csv(train_path, encoding="utf-8")
     validation_data = pd.read_csv(validation_path, encoding="utf-8")
+    print(f"Training file: {train_path} ({len(train_data)} rows)")
+    print(f"Validation file: {validation_path} ({len(validation_data)} rows)")
+    print(f"Model directory: {output_dir}")
     return train_from_frames(train_data, validation_data, output_dir)
 
 

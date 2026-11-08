@@ -31,9 +31,13 @@ from sakhi.src.train_baseline import (
     _situation_targets,
     train_from_frames,
 )
+from sakhi.src.train_embedding import MODELS_DIR as EMBEDDING_MODELS_DIR
+from sakhi.src.train_embedding import _encode
 
 LOGGER = logging.getLogger(__name__)
 RESULTS_DIR = PROJECT_ROOT / "sakhi" / "reports" / "results"
+EMBEDDING_RESULTS_DIR = PROJECT_ROOT / "sakhi" / "reports" / "results_embedding"
+ERRORS_DIR = PROJECT_ROOT / "sakhi" / "reports" / "results_v1"
 LABELS_PATH = PROJECT_ROOT / "sakhi" / "config" / "labels.yaml"
 VERIFIED_SYNTHETIC_LABEL = (
     "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
@@ -46,7 +50,10 @@ def load_labels() -> dict[str, list[str]]:
 
 
 def _predict(artifacts: BaselineArtifacts, data: pd.DataFrame) -> tuple[Any, Any]:
-    features = artifacts.vectorizer.transform(_model_text(data))
+    if hasattr(artifacts, "encoder"):
+        features = _encode(artifacts.encoder, _model_text(data))
+    else:
+        features = artifacts.vectorizer.transform(_model_text(data))
     urgency = artifacts.urgency_model.predict(features)
     probabilities = artifacts.situation_model.predict_proba(features)
     situation = pd.DataFrame(
@@ -63,6 +70,7 @@ def evaluate_frames(
     data: pd.DataFrame,
     output_dir: Path,
     result_label: str = "validation",
+    error_dump: Path | None = None,
 ) -> dict[str, Any]:
     """Calculate and save metrics, supports, and the urgency confusion matrix."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -70,6 +78,13 @@ def evaluate_frames(
     urgency_labels = list(labels["urgency_labels"])
     situation_labels = artifacts.situation_labels
     urgency_predictions, situation_predictions = _predict(artifacts, data)
+    evaluated_row_count = len(urgency_predictions)
+    if evaluated_row_count != len(data) or len(situation_predictions) != len(data):
+        raise ValueError(
+            "Evaluated row count does not match the number of rows in the evaluation file: "
+            f"file={len(data)}, urgency={len(urgency_predictions)}, "
+            f"situation={len(situation_predictions)}."
+        )
     urgency_true = data["urgency"].to_numpy()
     situation_true = _situation_targets(data, situation_labels)
     verified_synthetic = (
@@ -284,6 +299,52 @@ def evaluate_frames(
     }
     with (output_dir / f"{result_label}_metrics.json").open("w", encoding="utf-8") as handle:
         json.dump(summary, handle, indent=2, default=float)
+    if error_dump is not None:
+        error_rows = data.copy()
+        error_rows["true_urgency"] = urgency_true
+        error_rows["predicted_urgency"] = urgency_predictions
+        true_situations = [
+            "|".join(
+                label for index, label in enumerate(situation_labels) if situation_true[row_index, index]
+            )
+            for row_index in range(len(data))
+        ]
+        predicted_situations = [
+            "|".join(
+                label
+                for index, label in enumerate(situation_labels)
+                if situation_predictions[row_index, index]
+            )
+            for row_index in range(len(data))
+        ]
+        error_rows["true_situation_labels"] = true_situations
+        error_rows["predicted_situation_labels"] = predicted_situations
+        error_rows = error_rows.loc[
+            (error_rows["true_urgency"] != error_rows["predicted_urgency"])
+            | (
+                error_rows["true_situation_labels"]
+                != error_rows["predicted_situation_labels"]
+            )
+        ]
+        columns = [
+            column
+            for column in [
+                "id",
+                "text",
+                "true_urgency",
+                "predicted_urgency",
+                "true_situation_labels",
+                "predicted_situation_labels",
+            ]
+            if column in error_rows
+        ]
+        error_dump.parent.mkdir(parents=True, exist_ok=True)
+        error_rows.loc[:, columns].to_csv(error_dump, index=False, encoding="utf-8")
+        print(f"Error dump: {error_dump} ({len(error_rows)} rows)")
+    print(f"Evaluation file: in-memory frame ({len(data)} rows)")
+    print(f"Rows evaluated: {evaluated_row_count}")
+    print(f"Files written: {summary['metrics_csv']}, {output_dir / f'{result_label}_metrics.json'}, "
+          f"{output_dir / f'{result_label}_urgency_confusion_matrix.png'}")
     return summary
 
 
@@ -316,11 +377,52 @@ def load_evaluation_data(data_path: Path, final_test: bool = False) -> pd.DataFr
     return pd.read_csv(data_path, encoding="utf-8")
 
 
+def _load_model_metadata(models_dir: Path) -> dict[str, Any]:
+    metadata_path = models_dir / "model_metadata.json"
+    try:
+        return json.loads(metadata_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"Model metadata file not found: {metadata_path}") from exc
+
+
+def _validate_evaluation_labels(
+    data: pd.DataFrame,
+    metadata: dict[str, Any],
+) -> None:
+    model_urgency = set(metadata.get("urgency_labels", []))
+    model_situation = set(metadata.get("situation_labels", []))
+    if not model_urgency or not model_situation:
+        raise ValueError(
+            "model_metadata.json must contain non-empty urgency_labels and situation_labels."
+        )
+    observed_urgency = set(data["urgency"].astype(str))
+    observed_situation = {
+        label
+        for value in data["situation_labels"]
+        for label in str(value).split("|")
+        if label
+    }
+    unknown_urgency = sorted(observed_urgency - model_urgency)
+    unknown_situation = sorted(observed_situation - model_situation)
+    if unknown_urgency or unknown_situation:
+        details = []
+        if unknown_urgency:
+            details.append("urgency labels: " + ", ".join(unknown_urgency))
+        if unknown_situation:
+            details.append("situation labels: " + ", ".join(unknown_situation))
+        raise ValueError(
+            "Evaluation labels do not match the model training label list; "
+            + "; ".join(details)
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path)
     parser.add_argument("--models-dir", type=Path, default=MODELS_DIR)
     parser.add_argument("--output-dir", type=Path, default=RESULTS_DIR)
+    parser.add_argument("--model-type", choices=("tfidf", "embedding"), default="tfidf")
+    parser.add_argument("--error-dump", action="store_true")
     parser.add_argument("--final-test", action="store_true")
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
@@ -329,18 +431,67 @@ def main() -> None:
         print("SMOKE TEST, NOT A REAL RESULT")
         return
     split_name = "test" if args.final_test else "val"
+    if args.model_type == "embedding":
+        if args.models_dir == MODELS_DIR:
+            args.models_dir = EMBEDDING_MODELS_DIR
+        if args.output_dir == RESULTS_DIR:
+            args.output_dir = EMBEDDING_RESULTS_DIR
     data_path = args.data or PROCESSED_DIR / f"{split_name}.csv"
     if args.final_test:
         print("WARNING: final test evaluation should be run once only.")
     data = load_evaluation_data(data_path, final_test=args.final_test)
-    artifacts = BaselineArtifacts(
-        vectorizer=joblib.load(args.models_dir / "tfidf_features.joblib"),
-        urgency_model=joblib.load(args.models_dir / "urgency_model.joblib"),
-        situation_model=joblib.load(args.models_dir / "situation_model.joblib"),
-        situation_labels=json.loads((args.models_dir / "model_metadata.json").read_text())["situation_labels"],
-        thresholds=json.loads((args.models_dir / "situation_thresholds.json").read_text()),
+    metadata = _load_model_metadata(args.models_dir)
+    _validate_evaluation_labels(data, metadata)
+    print(f"Evaluation file: {data_path} ({len(data)} rows)")
+    print(f"Model directory: {args.models_dir}")
+    print(
+        "Model metadata: "
+        f"training_row_count={metadata.get('training_row_count')}, "
+        f"urgency_labels={metadata.get('urgency_labels')}, "
+        f"situation_labels={metadata.get('situation_labels')}"
     )
-    evaluate_frames(artifacts, data, args.output_dir, split_name)
+    metadata = _load_model_metadata(args.models_dir)
+    if args.model_type == "embedding":
+        from sakhi.src.train_embedding import EmbeddingArtifacts, _load_encoder
+
+        artifacts = EmbeddingArtifacts(
+            encoder=_load_encoder(metadata["model_name"]),
+            urgency_model=joblib.load(args.models_dir / "urgency_model.joblib"),
+            situation_model=joblib.load(args.models_dir / "situation_model.joblib"),
+            situation_labels=metadata["situation_labels"],
+            thresholds=json.loads(
+                (args.models_dir / "situation_thresholds.json").read_text()
+            ),
+        )
+    else:
+        artifacts = BaselineArtifacts(
+            vectorizer=joblib.load(args.models_dir / "tfidf_features.joblib"),
+            urgency_model=joblib.load(args.models_dir / "urgency_model.joblib"),
+            situation_model=joblib.load(args.models_dir / "situation_model.joblib"),
+            situation_labels=metadata["situation_labels"],
+            thresholds=json.loads(
+                (args.models_dir / "situation_thresholds.json").read_text()
+            ),
+        )
+    error_dump = (
+        ERRORS_DIR / f"errors_{args.model_type}.csv" if args.error_dump else None
+    )
+    summary = evaluate_frames(artifacts, data, args.output_dir, split_name, error_dump)
+    metrics = pd.DataFrame(summary["rows"])
+    print("\nUrgency and situation scores")
+    print(
+        metrics.loc[
+            metrics["metric_scope"].isin({"per_class", "per_label"}),
+            ["task", "label", "f1", "support"],
+        ].to_string(index=False)
+    )
+    print("\nPer-language scores")
+    print(
+        metrics.loc[
+            metrics["metric_scope"].isin({"per_language", "per_language_label"}),
+            ["task", "label", "f1", "support"],
+        ].to_string(index=False)
+    )
 
 
 if __name__ == "__main__":

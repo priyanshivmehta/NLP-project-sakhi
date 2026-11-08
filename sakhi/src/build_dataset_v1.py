@@ -63,7 +63,7 @@ def build_dataset(
     eval_path: Path = EVAL_PATH,
     output_path: Path = OUTPUT_PATH,
     removed_path: Path = REMOVED_PATH,
-    extra_train_path: Path = EXTRA_TRAIN_PATH,
+    extra_train_path: Path | None = None,
 ) -> pd.DataFrame:
     if not eval_path.exists():
         raise FileNotFoundError(
@@ -71,7 +71,9 @@ def build_dataset(
             "Import the reviewed verification sheet before building dataset_v1."
         )
     training = pd.read_csv(train_path, encoding="utf-8")
-    if extra_train_path.exists():
+    if extra_train_path is None and train_path == TRAIN_PATH:
+        extra_train_path = EXTRA_TRAIN_PATH
+    if extra_train_path is not None and extra_train_path.exists():
         training = pd.concat(
             [training, pd.read_csv(extra_train_path, encoding="utf-8")],
             ignore_index=True,

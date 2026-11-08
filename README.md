@@ -152,6 +152,22 @@ python -m sakhi.src.audit_dataset sakhi/data/raw/dev_dataset_450.csv
 - Validation and test may contain only `human_verified=true` rows whose
   generator does not occur in any training row. Unverified AI rows are
   training-only.
+
+### Optional multilingual embedding baseline
+
+The TF-IDF baseline remains the default. Install `requirements-train.txt` to
+train the optional multilingual sentence-embedding model:
+
+```powershell
+python -m sakhi.src.train_embedding
+python -m sakhi.src.evaluate --model-type embedding --error-dump
+python -m sakhi.src.compare_models
+```
+
+Embedding artifacts and cached vectors are written under
+`sakhi/models_embedding/`; embedding evaluation results are written under
+`sakhi/reports/results_embedding/`. The comparison utility writes CSV and
+Markdown results under `sakhi/reports/results_v1/`.
 - Generator names are provenance labels, not cryptographic proof of which
   external model or tool produced a row. The project must record the actual
   tool separately when known; differing filename labels alone do not establish

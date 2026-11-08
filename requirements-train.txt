@@ -1,0 +1,7 @@
+# Heavy optional dependencies for multilingual embedding training/evaluation
+torch>=2.1,<3
+transformers>=4.35,<5
+sentence-transformers>=2.2,<4
+faiss-cpu>=1.7,<2
+pypdf>=4.0,<6
+pdfplumber>=0.11,<1
