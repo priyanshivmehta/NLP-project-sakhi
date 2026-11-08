@@ -17,6 +17,9 @@ from sakhi.src.data import (
     MIN_TEST_EXAMPLES_PER_LANGUAGE,
     MIN_TEST_EXAMPLES_PER_SITUATION,
     MIN_TEST_EXAMPLES_PER_URGENCY,
+    MIN_VAL_EXAMPLES_PER_IMMEDIATE_DANGER,
+    MIN_VAL_EXAMPLES_PER_LANGUAGE,
+    TEST_SHARE_OF_EVAL,
     MIN_VERIFIED_EVAL_ROWS_TO_FREEZE,
     PROJECT_ROOT,
     _allocate_group_splits,
@@ -25,8 +28,10 @@ from sakhi.src.data import (
     load_label_config,
     validate_dataset,
 )
+MIN_TRAIN_ROWS_PER_LABEL = 30
 
 TRAIN_PATH = PROJECT_ROOT / "sakhi" / "data" / "raw" / "dev_dataset_450.csv"
+EXTRA_TRAIN_PATH = PROJECT_ROOT / "sakhi" / "data" / "raw" / "train_extra.csv"
 EVAL_PATH = PROJECT_ROOT / "sakhi" / "data" / "raw" / "eval_verified.csv"
 OUTPUT_PATH = PROJECT_ROOT / "sakhi" / "data" / "raw" / "dataset_v1.csv"
 REMOVED_PATH = PROJECT_ROOT / "sakhi" / "reports" / "audit" / "removed_train_rows.csv"
@@ -58,6 +63,7 @@ def build_dataset(
     eval_path: Path = EVAL_PATH,
     output_path: Path = OUTPUT_PATH,
     removed_path: Path = REMOVED_PATH,
+    extra_train_path: Path = EXTRA_TRAIN_PATH,
 ) -> pd.DataFrame:
     if not eval_path.exists():
         raise FileNotFoundError(
@@ -65,6 +71,11 @@ def build_dataset(
             "Import the reviewed verification sheet before building dataset_v1."
         )
     training = pd.read_csv(train_path, encoding="utf-8")
+    if extra_train_path.exists():
+        training = pd.concat(
+            [training, pd.read_csv(extra_train_path, encoding="utf-8")],
+            ignore_index=True,
+        )
     evaluation = pd.read_csv(eval_path, encoding="utf-8")
     required = {"id", "group_id", "text", "source", "generator", "human_verified"}
     for name, frame in (("training", training), ("verified evaluation", evaluation)):
@@ -106,12 +117,14 @@ def _rule_line(name: str, actual: int, required: int) -> str:
 def write_readiness_report(
     data: pd.DataFrame,
     report_path: Path = READINESS_PATH,
+    fail_on_training_label_shortfall: bool = False,
 ) -> str:
     assignments = _allocate_group_splits(data, ensure_test_coverage=True)
     preview = data.copy()
     preview["split"] = preview["group_id"].map(assignments)
     config = load_label_config(CONFIG_PATH)
     test = preview.loc[preview["split"] == "test"]
+    validation = preview.loc[preview["split"] == "val"]
     train_generators = sorted(
         preview.loc[preview["split"] == "train", "generator"].astype(str).unique()
     )
@@ -135,6 +148,38 @@ def write_readiness_report(
         ).size().to_string(),
         "```",
         "",
+        "## Rows by split, urgency, and situation label",
+        "",
+        "### Urgency",
+        "",
+        "```text",
+        preview.groupby(["split", "urgency"]).size().to_string(),
+        "```",
+        "",
+        "### Situation labels",
+        "",
+        "```text",
+        pd.DataFrame(
+            {
+                split: {
+                    label: _count_situations(
+                        preview.loc[preview["split"] == split], label
+                    )
+                    for label in config["situation_labels"]
+                }
+                for split in ("train", "val", "test")
+            }
+        ).to_string(),
+        "```",
+        "",
+        "## Allocation share",
+        "",
+        _rule_line(
+            "test verified-evaluation share",
+            len(test),
+            round(len(preview.loc[_verified_mask(preview)]) * TEST_SHARE_OF_EVAL),
+        ),
+        "",
         "## Test urgency counts",
         "",
     ]
@@ -155,6 +200,23 @@ def write_readiness_report(
                 MIN_TEST_EXAMPLES_PER_LANGUAGE,
             )
         )
+    lines.extend(["", "## Validation language counts", ""])
+    for language in config["allowed_languages"]:
+        lines.append(
+            _rule_line(
+                f"val {language}",
+                int((validation["language"] == language).sum()),
+                MIN_VAL_EXAMPLES_PER_LANGUAGE,
+            )
+        )
+    lines.extend(["", "## Validation immediate-danger count", ""])
+    lines.append(
+        _rule_line(
+            "val immediate_danger",
+            int((validation["urgency"] == "immediate_danger").sum()),
+            MIN_VAL_EXAMPLES_PER_IMMEDIATE_DANGER,
+        )
+    )
     lines.extend(["", "## Test situation-label counts", ""])
     for label in config["situation_labels"]:
         lines.append(
@@ -165,6 +227,23 @@ def write_readiness_report(
             )
         )
     verified_count = int(_verified_mask(preview).sum())
+    lines.extend(
+        [
+            "",
+            "## Training situation-label counts",
+            "",
+        ]
+    )
+    training = preview.loc[preview["split"] == "train"]
+    training_shortfalls = []
+    for label in config["situation_labels"]:
+        count = _count_situations(training, label)
+        lines.append(_rule_line(f"train {label}", count, MIN_TRAIN_ROWS_PER_LABEL))
+        if count < MIN_TRAIN_ROWS_PER_LABEL:
+            training_shortfalls.append(
+                f"{label}={count} of {MIN_TRAIN_ROWS_PER_LABEL} needed "
+                f"(shortfall {MIN_TRAIN_ROWS_PER_LABEL - count})"
+            )
     lines.extend(
         [
             "",
@@ -198,6 +277,11 @@ def write_readiness_report(
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(report, encoding="utf-8")
     print(report)
+    if fail_on_training_label_shortfall and training_shortfalls:
+        raise ValueError(
+            "Training situation-label counts below "
+            f"{MIN_TRAIN_ROWS_PER_LABEL}: " + ", ".join(training_shortfalls)
+        )
     return report
 
 
@@ -208,9 +292,10 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
     parser.add_argument("--removed", type=Path, default=REMOVED_PATH)
     parser.add_argument("--report", type=Path, default=READINESS_PATH)
+    parser.add_argument("--extra-train", type=Path, default=EXTRA_TRAIN_PATH)
     args = parser.parse_args()
-    combined = build_dataset(args.train, args.eval, args.output, args.removed)
-    write_readiness_report(combined, args.report)
+    combined = build_dataset(args.train, args.eval, args.output, args.removed, args.extra_train)
+    write_readiness_report(combined, args.report, fail_on_training_label_shortfall=True)
 
 
 if __name__ == "__main__":

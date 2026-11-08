@@ -5,6 +5,7 @@ import pandas as pd
 from sakhi.src.augment_noise import augment_verified_rows
 from sakhi.src.import_verified_eval import import_reviewed_sheet
 from sakhi.src.merge_eval_batches import merge_batches
+from sakhi.src.record_review_metadata import record_review_metadata
 
 
 ROOT = Path(__file__).parents[1]
@@ -70,3 +71,30 @@ def test_merge_import_and_noise_workflow(tmp_path: Path) -> None:
     noisy = augment_verified_rows(verified_path, noisy_path, seed=459)
     assert noisy["noisy"].tolist() == [True]
     assert noisy["text"].iloc[0] != ""
+
+
+def test_record_review_metadata_preserves_file_level_reviewers(tmp_path: Path) -> None:
+    review_path = tmp_path / "reviewed.csv"
+    pd.DataFrame(
+        [
+            {"verify_status": "ok", "reviewer": ""},
+            {"verify_status": "corrected", "reviewer": ""},
+            {"verify_status": "reject", "reviewer": ""},
+        ]
+    ).to_csv(review_path, index=False)
+    output_path = tmp_path / "review_summary.json"
+
+    summary = record_review_metadata(
+        "Name1, Name2",
+        "Two-person spreadsheet review",
+        review_path,
+        output_path,
+    )
+
+    assert summary["reviewers"] == ["Name1", "Name2"]
+    assert summary["total_rows"] == 3
+    assert summary["ok"] == 1
+    assert summary["corrected"] == 1
+    assert summary["rejected"] == 1
+    assert summary["method"] == "Two-person spreadsheet review"
+    assert output_path.exists()

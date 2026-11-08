@@ -136,7 +136,16 @@ python -m sakhi.src.audit_dataset sakhi/data/raw/dev_dataset_450.csv
   only. Evaluation rows may be AI-generated, but they enter validation/test
   only after human verification.
 - Every row records `generator` and `human_verified`. The 450 training rows use
-  `generator=train_gen1` and `human_verified=false`.
+  `chatgpt_train` and are never used for validation or test.
+- Optional additional training CSVs can be placed in
+  `sakhi/data/raw/train_extra/`. Run `python -m sakhi.src.merge_train_extra`
+  to validate and merge them into `train_extra.csv`; exact and near duplicates
+  are reported in `sakhi/reports/audit/removed_train_extra.csv`.
+- Extra merged rows use `source=ai_generated`, `generator=chatgpt_train`, and
+  `human_verified=false`.
+- The preview readiness report requires at least 30 training rows for every
+  situation label and reports the exact shortfall when a label is under that
+  threshold.
 - `sakhi/data/archive/dev_copy_legacy_ai.csv` is an archived duplicate of the
   450-row training dataset and is not an evaluation source.
 - Human-written rows use the `team_written` or `peer_written` source values.
@@ -158,6 +167,11 @@ python -m sakhi.src.audit_dataset sakhi/data/raw/dev_dataset_450.csv
   human-verified evaluation rows. The human test split must contain at least 30 rows in each language,
   at least 5 rows in each urgency class, and at least 3 rows for each
   situation label.
+- Coverage-enabled preview and freeze allocation targets 55% of verified
+  evaluation rows for test and 45% for validation, while keeping at least 30
+  rows per language in test, 20 per language in validation, and at least 5
+  immediate-danger rows in validation. Any unsatisfied rule is reported with
+  its exact shortfall.
 - AI-generated rows are kept in training only, and rows with TF-IDF cosine
   similarity above 0.85 to a human validation/test row are removed.
 - Every split run writes `split_class_counts.csv`, so reported test metrics can

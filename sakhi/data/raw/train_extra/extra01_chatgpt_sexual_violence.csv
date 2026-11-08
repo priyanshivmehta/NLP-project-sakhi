@@ -1,0 +1,46 @@
+text,language,perspective,situation_labels,urgency
+"वो अभी भी बाहर खड़ा है। उसने मेरे साथ जबरदस्ती की थी और अब फिर अंदर आने की कोशिश कर रहा है, मैं कमरे में अकेली हूँ।",hi,first,sexual_violence|stalking,non_urgent
+मेरी दोस्त को उसके पति ने उसकी मर्ज़ी के बिना यौन संबंध बनाने के लिए मजबूर किया। आज उसने फिर धमकी दी है कि मना किया तो मार देगा।,hi,third,sexual_violence|domestic_violence,non_urgent
+"मैंने उसे साफ मना किया था, फिर भी उसने मेरे साथ यौन हमला किया। वो अभी मेरे पीछे आ रहा है और मैं बहुत डर रही हूँ।",hi,first,sexual_violence|stalking,non_urgent
+मेरी बहन को एक जान-पहचान वाले ने यौन रूप से प्रताड़ित किया था। आज वो उसके घर के बाहर है और अंदर आने की कोशिश कर रहा है।,hi,third,sexual_violence|stalking,non_urgent
+उसने मेरे साथ जबरदस्ती की और अब मेरी निजी तस्वीरें भेजने की धमकी दे रहा है। कह रहा है कि अभी सबको भेज देगा।,hi,first,sexual_violence|cyber_abuse,non_urgent
+मेरी सहेली ने बताया कि उसके रिश्तेदार ने उसका यौन शोषण किया। वो अभी उसी घर में है और बाहर निकलने नहीं दे रहे।,hi,third,sexual_violence|domestic_violence,non_urgent
+मेरे पति ने मेरी सहमति के बिना मेरे साथ यौन जबरदस्ती की। मैं अभी सुरक्षित जगह पर हूँ लेकिन वो लगातार फोन करके धमका रहा है।,hi,first,sexual_violence|domestic_violence,info_seeking
+उसने मेरे साथ यौन हमला किया था और अब रोज़ रास्ते में रोकता है। आज भी कॉलेज से लौटते वक्त पीछे-पीछे आया।,hi,first,sexual_violence|stalking,urgent
+मेरी दोस्त के साथ उसके बॉस ने यौन दुर्व्यवहार किया। वो शिकायत करने से डर रही है क्योंकि नौकरी छीनने की धमकी मिली है।,hi,third,sexual_violence,urgent
+उसने मेरी मर्ज़ी के बिना मेरे साथ यौन ज़बरदस्ती की थी। अब मेरी निजी फोटो वायरल करने की धमकी दे रहा है।,hi,first,sexual_violence|cyber_abuse,urgent
+"मेरी बहन के पति ने उसका यौन शोषण किया है। वो अभी मायके में है, लेकिन ससुराल वाले वापस जाने का दबाव बना रहे हैं।",hi,third,sexual_violence|domestic_violence,urgent
+एक आदमी ने सड़क पर मुझे गलत तरीके से छुआ और यौन हमला किया। अब वो रोज़ उसी बस स्टॉप पर दिखता है।,hi,first,sexual_violence|street_harassment|stalking,urgent
+मेरी दोस्त ने बताया कि उसके साथ यौन हिंसा हुई थी। उसे समझ नहीं आ रहा कि किससे बात करे और शिकायत कैसे करे।,hi,third,sexual_violence,info_seeking
+अगर किसी महिला के साथ यौन हमला हुआ हो तो क्या वह कुछ दिन बाद भी शिकायत दर्ज करा सकती है? प्रक्रिया क्या है?,hi,third,sexual_violence,info_seeking
+"मेरे साथ कुछ महीने पहले यौन दुर्व्यवहार हुआ था। अभी मैं सुरक्षित हूँ, बस काउंसलिंग और कानूनी मदद के बारे में जानना चाहती हूँ।",hi,first,sexual_violence,non_urgent
+Woh abhi building ke gate pe hai. Usne mere saath sexual assault kiya tha aur ab zabardasti andar aane ki koshish kar raha hai.,hinglish,first,sexual_violence|stalking,non_urgent
+Meri friend ko uske husband ne consent ke bina force kiya. Abhi woh usko room se bahar nahi jaane de raha.,hinglish,third,sexual_violence|domestic_violence,non_urgent
+"Maine clearly no bola tha but usne mere saath zabardasti ki. Woh abhi bhi mere peeche aa raha hai, please help.",hinglish,first,sexual_violence|stalking,non_urgent
+"Usne mere saath sexual abuse kiya aur ab private photos leak karne ki dhamki de raha hai, bol raha hai abhi upload karega.",hinglish,first,sexual_violence|cyber_abuse,non_urgent
+Meri cousin ko ghar ke ek member ne sexually abuse kiya. Woh abhi usi ghar mein hai aur usse bahar nahi nikalne de rahe.,hinglish,third,sexual_violence|domestic_violence,non_urgent
+Meri roommate ke saath ek aadmi ne sexual assault kiya tha. Woh abhi hostel ke bahar wait kar raha hai aur andar aane ki koshish kar raha hai.,hinglish,third,sexual_violence|stalking,info_seeking
+Mere husband ne meri consent ke bina force kiya tha. Main abhi friend ke ghar hoon but woh baar baar dhamki wale messages bhej raha hai.,hinglish,first,sexual_violence|domestic_violence|cyber_abuse,urgent
+"Usne mere saath sexual violence ki thi, ab daily office ke route par follow karta hai. Kal bhi gate tak aa gaya.",hinglish,first,sexual_violence|stalking,urgent
+Meri friend ko manager ne sexually harass aur abuse kiya. Complaint karne par job se nikalne ki dhamki de raha hai.,hinglish,third,sexual_violence,urgent
+"Ek stranger ne bus stop ke paas mere saath zabardasti ki thi. Ab woh same jagah roz dikh raha hai, I feel unsafe.",hinglish,first,sexual_violence|street_harassment|stalking,urgent
+Meri sister ke husband ne uske saath sexual abuse kiya. Family usko wapas sasural jaane ke liye pressure kar rahi hai.,hinglish,third,sexual_violence|domestic_violence,urgent
+Usne meri marzi ke bina mere saath sexual assault kiya tha aur ab private pics share karne ki dhamki de raha hai.,hinglish,first,sexual_violence|cyber_abuse,urgent
+Meri friend ne share kiya ki uske saath sexual assault hua tha. Main usko support kaise kar sakti hoon without pressuring her?,hinglish,third,sexual_violence,info_seeking
+Agar incident ko kuch weeks ho gaye hain toh kya sexual violence ki complaint ab bhi file ho sakti hai?,hinglish,third,sexual_violence,info_seeking
+"Mere saath past mein sexual abuse hua tha. Abhi immediate threat nahi hai, bas counselling aur support options samajhne hain.",hinglish,first,sexual_violence,non_urgent
+He is outside my door right now. He forced himself on me before and is trying to get inside again.,en,first,sexual_violence|stalking,immediate_danger
+My friend was sexually assaulted by her husband. He has locked her inside and is refusing to let her leave.,en,third,sexual_violence|domestic_violence,immediate_danger
+"I said no, but he sexually assaulted me. He is following me right now and I cannot get away from him.",en,first,sexual_violence|stalking,immediate_danger
+He assaulted me and is threatening to post my private pictures right now. He says he knows where I am.,en,first,sexual_violence|cyber_abuse|stalking,immediate_danger
+My sister told me a family member sexually abused her. She is still in that house and they will not let her leave.,en,third,sexual_violence|domestic_violence,immediate_danger
+A man sexually assaulted my roommate earlier. He is waiting outside our hostel and trying to get past the entrance.,en,third,sexual_violence|stalking,immediate_danger
+"My husband forced me into sexual activity without my consent. I am somewhere safe now, but he keeps sending threats.",en,first,sexual_violence|domestic_violence|cyber_abuse,urgent
+He sexually assaulted me a while ago and now follows me on my way home from work almost every evening.,en,first,sexual_violence|stalking,urgent
+My colleague was sexually abused by her supervisor. He is pressuring her to stay quiet and threatening her job.,en,third,sexual_violence,urgent
+A man assaulted me near the bus stop and keeps showing up there. I am scared to take my usual route.,en,first,sexual_violence|street_harassment|stalking,urgent
+My friend's husband sexually abused her. Her relatives are insisting she return to the house where it happened.,en,third,sexual_violence|domestic_violence,urgent
+He forced me and is now threatening to circulate private images unless I meet him. I do not know what to do.,en,first,sexual_violence|cyber_abuse|stalking,urgent
+My friend disclosed that she was sexually assaulted. What can I say to support her without making her feel blamed?,en,third,sexual_violence,info_seeking
+"Can someone report sexual violence after several weeks, and what support is available if they do not want to go to the police yet?",en,third,sexual_violence,info_seeking
+I experienced sexual abuse in the past and I am safe now. I would like to understand counselling and support options.,en,first,sexual_violence,non_urgent

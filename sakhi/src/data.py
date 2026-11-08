@@ -23,11 +23,14 @@ RANDOM_SEED = 459
 TRAIN_FRACTION = 0.70
 VALIDATION_FRACTION = 0.15
 TEST_FRACTION = 0.15
+TEST_SHARE_OF_EVAL = 0.55
 MIN_ROWS_TO_FREEZE = 400
 MIN_VERIFIED_EVAL_ROWS_TO_FREEZE = 150
 MIN_TEST_EXAMPLES_PER_URGENCY = 5
 MIN_TEST_EXAMPLES_PER_SITUATION = 3
 MIN_TEST_EXAMPLES_PER_LANGUAGE = 30
+MIN_VAL_EXAMPLES_PER_LANGUAGE = 20
+MIN_VAL_EXAMPLES_PER_IMMEDIATE_DANGER = 5
 AI_NEAR_DUPLICATE_THRESHOLD = 0.85
 AI_SOURCE = "ai_generated"
 HUMAN_SOURCES = frozenset({"team_written", "peer_written", "team_authored"})
@@ -357,6 +360,94 @@ def _stratification_key(row: pd.Series) -> str:
     return f"{row['urgency']}::{('|'.join(situations) or 'none')}"
 
 
+def _allocate_coverage_holdouts(
+    group_data: pd.DataFrame,
+    total_eval_rows: int,
+) -> tuple[list[object], list[object]]:
+    """Select group-contained val/test sets with explicit coverage priorities."""
+    target_test_rows = max(1, round(total_eval_rows * TEST_SHARE_OF_EVAL))
+    groups = list(group_data.index)
+    test_groups: list[object] = []
+    test_rows = 0
+    test_language_counts: dict[str, int] = {}
+    test_immediate = 0
+
+    def can_select(group_id: object) -> bool:
+        row = group_data.loc[group_id]
+        language = str(row["language"])
+        language_total = int((group_data["language"] == language).sum())
+        selected_language = test_language_counts.get(language, 0) + 1
+        remaining_language = language_total - selected_language
+        if remaining_language < MIN_VAL_EXAMPLES_PER_LANGUAGE:
+            return False
+        if row["urgency"] == "immediate_danger":
+            immediate_total = int(
+                (group_data["urgency"] == "immediate_danger").sum()
+            )
+            remaining_immediate = immediate_total - test_immediate - 1
+            if remaining_immediate < MIN_VAL_EXAMPLES_PER_IMMEDIATE_DANGER:
+                return False
+        return True
+
+    def select(group_id: object) -> None:
+        nonlocal test_rows, test_immediate
+        row = group_data.loc[group_id]
+        test_groups.append(group_id)
+        test_rows += 1
+        language = str(row["language"])
+        test_language_counts[language] = test_language_counts.get(language, 0) + 1
+        if row["urgency"] == "immediate_danger":
+            test_immediate += 1
+
+    language_order = sorted(group_data["language"].astype(str).unique())
+    for language in language_order:
+        candidates = [
+            group_id
+            for group_id in groups
+            if str(group_data.loc[group_id, "language"]) == language
+            and group_id not in test_groups
+            and can_select(group_id)
+        ]
+        candidates.sort(
+            key=lambda group_id: (
+                group_data.loc[group_id, "urgency"] == "immediate_danger",
+                str(group_id),
+            )
+        )
+        needed = MIN_TEST_EXAMPLES_PER_LANGUAGE
+        selected_for_language = 0
+        for group_id in candidates:
+            if selected_for_language >= needed:
+                break
+            if can_select(group_id):
+                select(group_id)
+                selected_for_language += 1
+
+    remaining = [
+        group_id for group_id in groups
+        if group_id not in test_groups and can_select(group_id)
+    ]
+    remaining.sort(
+        key=lambda group_id: (
+            group_data.loc[group_id, "urgency"] != "immediate_danger",
+            str(group_data.loc[group_id, "language"]),
+            str(group_id),
+        )
+    )
+    for group_id in remaining:
+        if test_rows >= target_test_rows:
+            break
+        if not can_select(group_id):
+            continue
+        if group_data.loc[group_id, "urgency"] == "immediate_danger":
+            select(group_id)
+            continue
+        select(group_id)
+
+    val_groups = [group_id for group_id in groups if group_id not in test_groups]
+    return val_groups, test_groups
+
+
 def _allocate_group_splits(
     data: pd.DataFrame,
     ensure_test_coverage: bool = False,
@@ -428,29 +519,10 @@ def _allocate_group_splits(
         training_group_ids = data.loc[
             ~data["group_id"].isin(holdout_group_ids), "group_id"
         ].unique()
-        test_size = max(
-            1,
-            round(len(holdout_group_ids) * TEST_FRACTION),
-            minimum_test_size,
+        validation, test = _allocate_coverage_holdouts(
+            group_data,
+            len(human_data),
         )
-        test_size = min(test_size, max(1, len(holdout_group_ids) - 1))
-        try:
-            validation, test = train_test_split(
-                holdout_group_ids,
-                test_size=test_size,
-                random_state=RANDOM_SEED,
-                stratify=keys if keys.nunique() < len(keys) else None,
-            )
-        except ValueError as error:
-            LOGGER.warning(
-                "Strict holdout stratification is not possible; using fallback: %s",
-                error,
-            )
-            validation, test = train_test_split(
-                holdout_group_ids,
-                test_size=test_size,
-                random_state=RANDOM_SEED,
-            )
         assignments = {group_id: "train" for group_id in training_group_ids}
         assignments.update({group_id: "val" for group_id in validation})
         assignments.update({group_id: "test" for group_id in test})

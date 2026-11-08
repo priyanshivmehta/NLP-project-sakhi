@@ -1,0 +1,13 @@
+{
+  "reviewers": [
+    "Priyanshi",
+    "Astha",
+    "Palak"
+  ],
+  "date": "2026-11-08",
+  "total_rows": 273,
+  "ok": 256,
+  "corrected": 16,
+  "rejected": 1,
+  "method": "Evaluation rows were generated with Claude and read through by the three team members, who corrected 16 rows and rejected 1."
+}

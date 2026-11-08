@@ -1,0 +1,31 @@
+﻿text,language,perspective,situation_labels,urgency
+रात को एक अनजान गाड़ी काफी देर से मेरे पीछे आ रही है। मैं सुनसान सड़क पर हूँ और समझ नहीं आ रहा कहाँ जाऊँ।,hi,first,other,immediate_danger
+हॉस्टल के बाहर कुछ लोग मेरा इंतज़ार कर रहे हैं और मुझे अकेले अंदर जाने में डर लग रहा है।,hi,first,other,immediate_danger
+मैं जिस कैब में हूँ उसका ड्राइवर तय रास्ते से अलग जा रहा है। फोन भी ठीक से नहीं लग रहा।,hi,first,other,non_urgent
+मेरी दोस्त को रास्ते में कुछ लोगों ने घेर लिया है। वह बहुत डरी हुई है और सुरक्षित जगह ढूँढ रही है।,hi,third,other,non_urgent
+लॉज के कमरे के बाहर कोई बार बार दरवाज़ा खटखटा रहा है और रिसेप्शन फोन नहीं उठा रहा।,hi,first,other,info_seeking
+कल रात घर लौटते समय एक समूह मेरे पीछे काफी दूर तक आया। अब उसी रास्ते से जाने में डर लगता है।,hi,first,other,urgent
+मेरी सहेली नए हॉस्टल में सुरक्षित महसूस नहीं कर रही। वहाँ रात में बाहर से लोग अंदर आ जाते हैं।,hi,third,other,urgent
+एक ड्राइवर ने मुझे गलत जगह उतार दिया था और काफी देर तक वहीं रुका रहा। अब भी डर लग रहा है।,hi,first,other,urgent
+"अगर किसी को सुरक्षित महसूस न हो और तुरंत खतरा न हो, तो स्थानीय सहायता या काउंसलिंग कहाँ मिल सकती है?",hi,third,other,urgent
+"मेरी दोस्त अभी सुरक्षित है, लेकिन उस घटना के बाद उसे लगातार डर लगता है। उसे समय और सहारे की ज़रूरत है।",hi,third,other,non_urgent
+"Ek unknown car kaafi der se follow kar rahi hai, road bilkul khaali hai aur mujhe samajh nahi aa raha kahan jaun.",hinglish,first,other,immediate_danger
+Hostel ke bahar kuch log khade hain aur mujhe lag raha hai woh mere room tak aa jayenge. I am scared.,hinglish,first,other,immediate_danger
+"Cab driver app wale route se nahi ja raha, baar baar bolne par bhi turn le raha hai. Please what should I do?",hinglish,first,other,non_urgent
+"Meri friend ko kuch logon ne road par surround kar liya hai, woh call par ro rahi hai aur help maang rahi hai.",hinglish,third,other,non_urgent
+Guest house ke door ko koi zor zor se knock kar raha hai. Reception respond nahi kar raha and I am alone.,hinglish,first,other,info_seeking
+Kal raat kuch boys ka group mere peeche hostel tak aaya. Aaj bhi woh gate ke paas dikh rahe hain.,hinglish,first,other,urgent
+"Meri roommate ko lodging safe nahi lag rahi, staff bina permission room ke paas aa jata hai. Kisse complain kare?",hinglish,third,other,urgent
+Auto driver ne mujhe planned stop se kaafi aage drop kiya aur wahan wait karta raha. Ab travel karne se darr lagta hai.,hinglish,first,other,urgent
+Agar kisi ko general safety concern ho aur emergency na ho toh kaunsi helpline ya service guide kar sakti hai?,hinglish,third,other,info_seeking
+"Meri friend ko ek incident ke baad neend nahi aa rahi. Woh safe hai, bas chahti hai koi uski baat sun le.",hinglish,third,other,non_urgent
+A car I do not recognize has been following me for several turns. I am on a deserted road and it is getting closer.,en,first,other,immediate_danger
+There are several people outside my hostel room shouting and trying the handle. I am alone inside.,en,first,other,non_urgent
+The cab driver has ignored the route and is taking unfamiliar roads. I have asked him to stop but he keeps driving.,en,first,other,non_urgent
+My friend says a group has surrounded her near the station. She is frightened and cannot see a safe way out.,en,third,other,non_urgent
+Someone is repeatedly trying to open the door of my guest room. The front desk is not answering.,en,first,other,info_seeking
+A group of men followed me almost all the way back to my accommodation last night. I am afraid to go out again.,en,first,other,urgent
+My friend feels unsafe at her hostel because strangers can enter the building late at night. Who should she contact?,en,third,other,urgent
+"The driver dropped me far from the destination and stayed nearby watching me. I got home, but I still feel uneasy.",en,first,other,urgent
+Is there a general women’s support helpline for someone who is unsure whether their situation counts as an emergency?,en,third,other,info_seeking
+"My friend has felt unsettled since a frightening incident, though she is safe now. I want to be there for her.",en,third,other,non_urgent
