@@ -18,6 +18,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = PROJECT_ROOT / "sakhi" / "data" / "legal" / "source"
 CHUNKS_PATH = PROJECT_ROOT / "sakhi" / "data" / "legal" / "chunks" / "chunks.csv"
 UNPARSED_PATH = PROJECT_ROOT / "sakhi" / "data" / "legal" / "unparsed_sections.txt"
+MANUAL_OVERRIDES_DIR = PROJECT_ROOT / "sakhi" / "data" / "legal" / "manual_overrides"
 OUTPUT_COLUMNS = [
     "chunk_id",
     "act",
@@ -35,6 +36,9 @@ SECTION_RE = re.compile(
 )
 ACT_RE = re.compile(r"(?im)^(?:act|अधिनियम)\s*[:\-]\s*(.+)$")
 SUPPORTED = {".txt", ".md", ".markdown", ".csv"}
+SECTION_PREFIX_RE = re.compile(
+    r"^\s*(?:section\s+|धारा\s+)?([0-9]+[A-Za-z]?)\b", re.IGNORECASE
+)
 
 
 def _act_from_path(path: Path) -> str:
@@ -66,6 +70,13 @@ def _read_source(path: Path) -> str:
     return "\n".join(frame["text"].tolist())
 
 
+def _section_title(opening_line: str, parsed_title: str) -> str:
+    title = parsed_title.strip()
+    if title and len(title) <= 80:
+        return title
+    return opening_line[:80]
+
+
 def _parse_file(path: Path) -> tuple[list[dict[str, str]], list[str]]:
     text = _read_source(path)
     known_act = _act_from_path(path)
@@ -81,6 +92,10 @@ def _parse_file(path: Path) -> tuple[list[dict[str, str]], list[str]]:
     for index, match in enumerate(matches):
         section_no = (match.group(1) or match.group(3) or "").strip()
         title = (match.group(2) or match.group(4) or "").strip()
+        line_end = text.find("\n", match.start())
+        if line_end < 0:
+            line_end = len(text)
+        opening_line = text[match.start():line_end].rstrip("\r")
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         body = text[start:end].strip()
@@ -97,8 +112,8 @@ def _parse_file(path: Path) -> tuple[list[dict[str, str]], list[str]]:
                 "chunk_id": chunk_id,
                 "act": act,
                 "section_no": section_no,
-                "section_title": title,
-                "text": body,
+                "section_title": _section_title(opening_line, title),
+                "text": opening_line + (f"\n{body}" if body else ""),
                 "language": language,
                 "source_file": path.name,
             }
@@ -106,10 +121,56 @@ def _parse_file(path: Path) -> tuple[list[dict[str, str]], list[str]]:
     return chunks, unparsed
 
 
+def validate_chunk_openings(chunks: list[dict[str, str]] | pd.DataFrame) -> list[str]:
+    """Return chunk IDs whose text does not begin with their section number."""
+    records = chunks.to_dict("records") if isinstance(chunks, pd.DataFrame) else chunks
+    invalid: list[str] = []
+    for chunk in records:
+        match = SECTION_PREFIX_RE.match(str(chunk["text"]))
+        if not match or match.group(1).casefold() != str(chunk["section_no"]).casefold():
+            invalid.append(str(chunk["chunk_id"]))
+    if invalid:
+        print("Chunks missing their section-number opening (first 20):")
+        print(", ".join(invalid[:20]))
+    return invalid
+
+
+def _parse_override(path: Path) -> dict[str, str]:
+    act, separator, section_part = path.stem.rpartition("_")
+    if not separator or not act or not section_part:
+        raise ValueError(
+            f"Override filename must be <act>_<section>.txt: {path.name}"
+        )
+    section_no = section_part.removeprefix("S")
+    if not section_no:
+        raise ValueError(f"Override filename has no section number: {path.name}")
+    text = _read_source(path).strip()
+    prefix = SECTION_PREFIX_RE.match(text)
+    if not prefix or prefix.group(1).casefold() != section_no.casefold():
+        raise ValueError(
+            f"Override {path.name} must begin with section number {section_no}"
+        )
+    chunk_id = f"{act}-{section_part}"
+    opening_line = text.splitlines()[0].rstrip("\r")
+    language = "hi" if len(re.findall(r"[\u0900-\u097F]", text)) > len(
+        re.findall(r"[A-Za-z]", text)
+    ) else "en"
+    return {
+        "chunk_id": chunk_id,
+        "act": act,
+        "section_no": section_no,
+        "section_title": _section_title(opening_line, ""),
+        "text": text,
+        "language": language,
+        "source_file": path.name,
+    }
+
+
 def ingest_sources(
     source_dir: Path = SOURCE_DIR,
     chunks_path: Path = CHUNKS_PATH,
     unparsed_path: Path = UNPARSED_PATH,
+    manual_overrides_dir: Path = MANUAL_OVERRIDES_DIR,
 ) -> pd.DataFrame:
     """Parse all supported source files and write chunks and parse failures."""
     chunks: list[dict[str, str]] = []
@@ -123,12 +184,24 @@ def ingest_sources(
             file_chunks, file_unparsed = [], [f"{path.name}: {error}"]
         chunks.extend(file_chunks)
         unparsed.extend(file_unparsed)
+    overrides: list[dict[str, str]] = []
+    if manual_overrides_dir.is_dir():
+        for path in sorted(manual_overrides_dir.glob("*.txt")):
+            override = _parse_override(path)
+            LOGGER.info("Applying manual legal override %s", path.name)
+            overrides.append(override)
+    chunks.extend(overrides)
     unique_chunks: dict[tuple[str, str], dict[str, str]] = {}
     for chunk in chunks:
         key = (chunk["act"], chunk["section_no"])
         if key not in unique_chunks or len(chunk["text"]) > len(unique_chunks[key]["text"]):
             unique_chunks[key] = chunk
     chunks = list(unique_chunks.values())
+    invalid_openings = validate_chunk_openings(chunks)
+    if invalid_openings:
+        raise ValueError(
+            f"{len(invalid_openings)} chunks do not begin with their own section number"
+        )
     chunks_path.parent.mkdir(parents=True, exist_ok=True)
     frame = pd.DataFrame(chunks, columns=OUTPUT_COLUMNS)
     frame.to_csv(chunks_path, index=False, encoding="utf-8")
@@ -145,9 +218,10 @@ def main() -> None:
     parser.add_argument("--source-dir", type=Path, default=SOURCE_DIR)
     parser.add_argument("--chunks", type=Path, default=CHUNKS_PATH)
     parser.add_argument("--unparsed", type=Path, default=UNPARSED_PATH)
+    parser.add_argument("--manual-overrides-dir", type=Path, default=MANUAL_OVERRIDES_DIR)
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    ingest_sources(args.source_dir, args.chunks, args.unparsed)
+    ingest_sources(args.source_dir, args.chunks, args.unparsed, args.manual_overrides_dir)
 
 
 if __name__ == "__main__":

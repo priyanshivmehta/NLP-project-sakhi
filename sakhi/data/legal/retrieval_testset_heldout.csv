@@ -1,0 +1,16 @@
+query,language,expected_chunk_ids
+"we live separately since 6 months, not divorced. he came and forced me last night. is this rape or what",en,BNS-67
+प्रोफेसर कह रहे हैं उनके साथ सोई नहीं तो प्रैक्टिकल में फेल कर देंगे। क्या ये अपराध है?,hi,BNS-68
+"bheed me kuch ladko ne mera dupatta kurta kheench ke kapde utarne ki koshish ki, kaun si dhara lagegi",hinglish,BNS-76
+"उसने नकली शादी करके मुझे अपनी पत्नी बनाकर रखा, अब कहता है शादी हुई ही नहीं थी",hi,BNS-81
+inlaws got my abortion done without my consent bcoz scan showed girl. is there any law for this,en,BNS-89
+"tantrik bol raha hai usne jo kaha nahi kiya to meri family pe shaap lagega, mujhe akele bula raha hai, mummy darr gayi",hinglish,BNS-354
+"someone made fake insta account with my name n pics, asking my friends for money. what section",en,IT-66D
+"मेरी 15 साल की बहन की न्यूड फोटो स्कूल के व्हाट्सऐप ग्रुप में घूम रही है, क्या करें",hi,IT-67B
+"HR keh rahi complaint wapas lelo aur paise lekar settle kar lo, ye sahi hai kya",hinglish,POSH-2013-S10
+filed complaint on my manager but still have to sit next to him. can i get transfer or leave till inquiry is over,en,POSH-2013-S12
+ऑफिस में शिकायत करनी है पर सबूत नहीं है। अगर साबित न हुआ तो क्या मुझे सज़ा होगी?,hi,POSH-2013-S14
+"padosi ki wife ko roz maar padti hai, main report karu to mujhe koi problem toh nahi hogi",hinglish,PWDVA-2005-S4
+"पति ने इतना मारा कि अस्पताल गई, बोले पहले पुलिस केस लाओ तब इलाज करेंगे",hi,PWDVA-2005-S7
+"husband is trying to sell the flat where i live, its in his name. can he do that while im still staying",en,PWDVA-2005-S19
+"papa ne shaadi me dahej diya tha, ab usi pe case ho sakta hai kya, dene wale ko bhi saza?",hinglish,DPA-1961-S3

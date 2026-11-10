@@ -1,0 +1,21 @@
+{
+  "model_family": "embedding",
+  "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+  "training_row_count": 525,
+  "urgency_labels": [
+    "immediate_danger",
+    "info_seeking",
+    "non_urgent",
+    "urgent"
+  ],
+  "situation_labels": [
+    "street_harassment",
+    "stalking",
+    "domestic_violence",
+    "workplace_harassment",
+    "dowry_harassment",
+    "cyber_abuse",
+    "sexual_violence",
+    "other"
+  ]
+}

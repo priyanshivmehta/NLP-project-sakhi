@@ -416,6 +416,41 @@ def _validate_evaluation_labels(
         )
 
 
+def _write_clean_noisy_comparison(
+    clean_summary: dict[str, Any],
+    noisy_summary: dict[str, Any],
+    output_dir: Path,
+    split_name: str,
+) -> tuple[Path, Path]:
+    clean = pd.DataFrame(clean_summary["rows"])
+    noisy = pd.DataFrame(noisy_summary["rows"])
+    keys = ["task", "metric_scope", "label"]
+    clean = clean[keys + ["f1", "support"]].rename(
+        columns={"f1": "clean_f1", "support": "clean_support"}
+    )
+    noisy = noisy[keys + ["f1", "support"]].rename(
+        columns={"f1": "noisy_f1", "support": "noisy_support"}
+    )
+    comparison = clean.merge(noisy, on=keys, how="outer")
+    csv_path = output_dir / f"{split_name}_clean_noisy_comparison.csv"
+    json_path = output_dir / f"{split_name}_clean_noisy_comparison.json"
+    comparison.to_csv(csv_path, index=False)
+    json_path.write_text(
+        json.dumps(
+            {
+                "result_label": "CLEAN_VS_NOISY_FINAL_TEST",
+                "clean_metrics": clean_summary["metrics_csv"],
+                "noisy_metrics": noisy_summary["metrics_csv"],
+                "rows": comparison.fillna("").to_dict("records"),
+            },
+            indent=2,
+            default=float,
+        ),
+        encoding="utf-8",
+    )
+    return csv_path, json_path
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path)
@@ -450,7 +485,6 @@ def main() -> None:
         f"urgency_labels={metadata.get('urgency_labels')}, "
         f"situation_labels={metadata.get('situation_labels')}"
     )
-    metadata = _load_model_metadata(args.models_dir)
     if args.model_type == "embedding":
         from sakhi.src.train_embedding import EmbeddingArtifacts, _load_encoder
 
@@ -485,6 +519,29 @@ def main() -> None:
             ["task", "label", "f1", "support"],
         ].to_string(index=False)
     )
+    if args.final_test:
+        noisy_path = data_path.with_name("test_noisy.csv")
+        if noisy_path.is_file():
+            noisy_data = load_evaluation_data(noisy_path, final_test=True)
+            _validate_evaluation_labels(noisy_data, metadata)
+            print(f"Noisy evaluation file: {noisy_path} ({len(noisy_data)} rows)")
+            noisy_summary = evaluate_frames(
+                artifacts,
+                noisy_data,
+                args.output_dir,
+                "test_noisy",
+            )
+            clean_noisy_csv, clean_noisy_json = _write_clean_noisy_comparison(
+                summary, noisy_summary, args.output_dir, "test"
+            )
+            clean_noisy = pd.DataFrame(
+                json.loads(clean_noisy_json.read_text(encoding="utf-8"))["rows"]
+            )
+            print("\nClean vs noisy final-test scores")
+            print(clean_noisy.to_string(index=False))
+            print(f"Files written: {clean_noisy_csv}, {clean_noisy_json}")
+        else:
+            print(f"No noisy final-test file found; skipped: {noisy_path}")
     print("\nPer-language scores")
     print(
         metrics.loc[

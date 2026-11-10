@@ -6,6 +6,7 @@ import argparse
 import logging
 import random
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -16,23 +17,65 @@ REPORT_PATH = PROJECT_ROOT / "sakhi" / "reports" / "audit" / "legal_pdf_report.m
 LOGGER = logging.getLogger(__name__)
 PAGE_NUMBER_RE = re.compile(r"^\s*(?:page\s*)?\d+\s*$", re.IGNORECASE)
 BNS_NAME = "BNS_2023.pdf"
+PDFPLUMBER_X_TOLERANCE = 1.5
+BNS_GAZETTE_HEADER_RE = re.compile(
+    r"^\s*(?:_+\s*\d*\s*|_*\s*(?:THE GAZETTE OF INDIA EXTRAORDINARY|\[?Part II—).*)\s*$",
+    re.IGNORECASE,
+)
+LONG_SINGLE_TOKEN_RE = re.compile(r"^[^\W\d_]+$", re.UNICODE)
 
 
-def _extract_pages(pdf_path: Path) -> list[str]:
-    if pdf_path.name == BNS_NAME:
-        pages, _ = _extract_bns_pages(pdf_path)
-        return pages
+def _extract_with_pdftotext(pdf_path: Path) -> list[str]:
     try:
-        from pypdf import PdfReader
+        completed = subprocess.run(
+            ["pdftotext", str(pdf_path), "-"],
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            "The pdftotext engine was requested, but Poppler's pdftotext command "
+            "was not found on PATH."
+        ) from exc
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"pdftotext failed for {pdf_path}: {exc.stderr}") from exc
+    return completed.stdout.split("\f")
+
+
+def _extract_with_pdfplumber(
+    pdf_path: Path, x_tolerance: float = PDFPLUMBER_X_TOLERANCE
+) -> list[str]:
+    try:
+        import pdfplumber
     except ImportError as exc:
         raise RuntimeError(
-            "pypdf is required for legal PDF extraction. Install requirements-train.txt."
+            "pdfplumber is required for legal PDF extraction. Install requirements-train.txt."
         ) from exc
-    reader = PdfReader(str(pdf_path))
-    return [(page.extract_text() or "") for page in reader.pages]
+    with pdfplumber.open(pdf_path) as pdf:
+        return [page.extract_text(x_tolerance=x_tolerance) or "" for page in pdf.pages]
 
 
-def _extract_bns_pages(pdf_path: Path) -> tuple[list[str], list[dict[str, object]]]:
+def _extract_pages(
+    pdf_path: Path,
+    engine: str = "pdfplumber",
+    x_tolerance: float = PDFPLUMBER_X_TOLERANCE,
+) -> list[str]:
+    if engine == "pdftotext":
+        return _extract_with_pdftotext(pdf_path)
+    if engine != "pdfplumber":
+        raise ValueError(f"Unsupported PDF extraction engine: {engine}")
+    if pdf_path.name == BNS_NAME:
+        pages, _ = _extract_bns_pages(pdf_path, x_tolerance=x_tolerance)
+        return pages
+    return _extract_with_pdfplumber(pdf_path, x_tolerance=x_tolerance)
+
+
+def _extract_bns_pages(
+    pdf_path: Path, x_tolerance: float = PDFPLUMBER_X_TOLERANCE
+) -> tuple[list[str], list[dict[str, object]]]:
     try:
         import pdfplumber
     except ImportError as exc:
@@ -98,7 +141,7 @@ def _extract_bns_pages(pdf_path: Path) -> tuple[list[str], list[dict[str, object
                     body_right,
                 )
             cropped = page.crop((body_left, 0, body_right, page.height))
-            extracted.append(cropped.extract_text() or "")
+            extracted.append(cropped.extract_text(x_tolerance=x_tolerance) or "")
     return extracted, margin_pages
 
 
@@ -114,7 +157,9 @@ def _repeated_lines(pages: list[str]) -> set[str]:
     return {line for line, count in counts.items() if count >= minimum}
 
 
-def _clean_pages(pages: list[str]) -> tuple[list[str], list[str]]:
+def _clean_pages(
+    pages: list[str], remove_bns_headers: bool = False
+) -> tuple[list[str], list[str]]:
     repeated = _repeated_lines(pages)
     removed: list[str] = []
     cleaned: list[str] = []
@@ -122,12 +167,35 @@ def _clean_pages(pages: list[str]) -> tuple[list[str], list[str]]:
         kept: list[str] = []
         for line in page.splitlines():
             stripped = line.strip()
+            if remove_bns_headers and BNS_GAZETTE_HEADER_RE.fullmatch(stripped):
+                removed.append(stripped)
+                continue
             if stripped and (stripped in repeated or PAGE_NUMBER_RE.fullmatch(stripped)):
                 removed.append(stripped)
                 continue
             kept.append(line)
         cleaned.append("\n".join(kept).strip())
     return cleaned, removed
+
+
+def _spacing_check(pages: list[str]) -> dict[str, object]:
+    tokens = [
+        token
+        for page in pages
+        for line in page.splitlines()
+        if len(line.split()) == 1
+        for token in line.split()
+        if LONG_SINGLE_TOKEN_RE.fullmatch(token) and len(token) > 40
+    ]
+    all_tokens = [
+        token
+        for page in pages
+        for token in re.findall(r"[^\W\d_]+", page, flags=re.UNICODE)
+    ]
+    return {
+        "long_single_token_lines": len(tokens),
+        "longest_tokens": sorted(set(all_tokens), key=lambda token: (-len(token), token))[:5],
+    }
 
 
 def _looks_garbled(text: str) -> bool:
@@ -142,13 +210,21 @@ def _looks_garbled(text: str) -> bool:
     return replacement_count > 0 or non_letter_count > max(10, len(text) // 3) or broken_devanagari
 
 
-def convert_pdf(pdf_path: Path, output_dir: Path = SOURCE_DIR) -> dict[str, object]:
+def convert_pdf(
+    pdf_path: Path,
+    output_dir: Path = SOURCE_DIR,
+    engine: str = "pdfplumber",
+    x_tolerance: float = PDFPLUMBER_X_TOLERANCE,
+) -> dict[str, object]:
     margin_pages: list[dict[str, object]] = []
-    if pdf_path.name == BNS_NAME:
-        pages, margin_pages = _extract_bns_pages(pdf_path)
+    if engine == "pdfplumber" and pdf_path.name == BNS_NAME:
+        pages, margin_pages = _extract_bns_pages(pdf_path, x_tolerance=x_tolerance)
     else:
-        pages = _extract_pages(pdf_path)
-    cleaned_pages, removed = _clean_pages(pages)
+        pages = _extract_pages(pdf_path, engine=engine, x_tolerance=x_tolerance)
+    cleaned_pages, removed = _clean_pages(
+        pages, remove_bns_headers=pdf_path.name == BNS_NAME
+    )
+    spacing = _spacing_check(cleaned_pages)
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{pdf_path.stem}.txt"
     output_path.write_text("\n\n".join(cleaned_pages) + "\n", encoding="utf-8")
@@ -165,6 +241,9 @@ def convert_pdf(pdf_path: Path, output_dir: Path = SOURCE_DIR) -> dict[str, obje
         "removed": removed,
         "margin_pages": margin_pages,
         "pages_text": cleaned_pages,
+        "engine": engine,
+        "x_tolerance": x_tolerance if engine == "pdfplumber" else None,
+        "spacing": spacing,
     }
 
 
@@ -172,8 +251,21 @@ def convert_all(
     source_pdf_dir: Path = SOURCE_PDF_DIR,
     output_dir: Path = SOURCE_DIR,
     report_path: Path = REPORT_PATH,
+    engine: str = "pdfplumber",
+    engine_overrides: dict[str, str] | None = None,
+    x_tolerance_overrides: dict[str, float] | None = None,
 ) -> list[dict[str, object]]:
-    results = [convert_pdf(path, output_dir) for path in sorted(source_pdf_dir.glob("*.pdf"))]
+    engine_overrides = engine_overrides or {}
+    x_tolerance_overrides = x_tolerance_overrides or {}
+    results = [
+        convert_pdf(
+            path,
+            output_dir,
+            engine=engine_overrides.get(path.name, engine),
+            x_tolerance=x_tolerance_overrides.get(path.name, PDFPLUMBER_X_TOLERANCE),
+        )
+        for path in sorted(source_pdf_dir.glob("*.pdf"))
+    ]
     lines = [
         "# Legal PDF extraction report",
         "",
@@ -186,12 +278,23 @@ def convert_all(
                 f"## {result['name']}",
                 "",
                 f"- Output: `{result['output']}`",
+                f"- Engine: `{result['engine']}`",
+                (
+                    f"- pdfplumber x_tolerance: `{result['x_tolerance']}`"
+                    if result["x_tolerance"] is not None
+                    else ""
+                ),
                 f"- Pages: {result['pages']}",
                 f"- Pages with almost no text: {len(result['sparse_pages'])} "
                 f"({result['sparse_pages'] or 'none'})",
                 f"- Pages flagged as possibly garbled: {result['garbled_pages'] or 'none'}",
                 f"- Removed repeated/header/footer/page-number lines: {len(result['removed'])}",
+                f"- BNS Gazette header lines removed: "
+                f"{sum(1 for line in result['removed'] if BNS_GAZETTE_HEADER_RE.fullmatch(line))}",
                 f"- BNS marginal-column pages removed: {len(result['margin_pages'])}",
+                f"- Lines with one alphabetic token longer than 40 letters: "
+                f"{result['spacing']['long_single_token_lines']}",
+                f"- Five longest tokens: {result['spacing']['longest_tokens']}",
             ]
         )
         if result["margin_pages"]:
@@ -218,8 +321,11 @@ def convert_all(
     for result in results:
         print(
             f"{result['name']}: pages={result['pages']}, "
+            f"engine={result['engine']}, "
             f"almost_no_text={len(result['sparse_pages'])}, "
-            f"garbled={result['garbled_pages'] or 'none'}"
+            f"garbled={result['garbled_pages'] or 'none'}, "
+            f"long_single_tokens={result['spacing']['long_single_token_lines']}, "
+            f"longest_tokens={result['spacing']['longest_tokens']}"
         )
         for index in sorted(
             random.Random(result["name"]).sample(
@@ -228,6 +334,12 @@ def convert_all(
         ):
             print(f"  page {index + 1}: {str(result['pages_text'][index])[:300]}")
     print(f"Report: {report_path}")
+    bns_result = next((result for result in results if result["name"] == BNS_NAME), None)
+    if bns_result and bns_result["spacing"]["long_single_token_lines"] > 0:
+        raise RuntimeError(
+            "BNS_2023.txt still contains lines with a single alphabetic token "
+            "longer than 40 letters; use a better extraction engine/source PDF."
+        )
     return results
 
 
@@ -236,11 +348,48 @@ def main() -> None:
     parser.add_argument("--source-pdf-dir", type=Path, default=SOURCE_PDF_DIR)
     parser.add_argument("--output-dir", type=Path, default=SOURCE_DIR)
     parser.add_argument("--report", type=Path, default=REPORT_PATH)
+    parser.add_argument("--engine", choices=("pdfplumber", "pdftotext"), default="pdfplumber")
+    parser.add_argument(
+        "--file-engine",
+        action="append",
+        default=[],
+        metavar="FILE=ENGINE",
+        help="Override the engine for one file, for example BNS_2023.pdf=pdftotext.",
+    )
+    parser.add_argument(
+        "--x-tolerance",
+        action="append",
+        default=[],
+        metavar="FILE=VALUE",
+        help="Override pdfplumber x_tolerance for one file.",
+    )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(errors="replace")
-    convert_all(args.source_pdf_dir, args.output_dir, args.report)
+    engine_overrides = {}
+    for item in args.file_engine:
+        name, separator, value = item.partition("=")
+        if not separator or value not in {"pdfplumber", "pdftotext"}:
+            parser.error(f"Invalid --file-engine value: {item}")
+        engine_overrides[name] = value
+    x_tolerance_overrides = {}
+    for item in args.x_tolerance:
+        name, separator, value = item.partition("=")
+        if not separator:
+            parser.error(f"Invalid --x-tolerance value: {item}")
+        try:
+            x_tolerance_overrides[name] = float(value)
+        except ValueError:
+            parser.error(f"Invalid --x-tolerance value: {item}")
+    convert_all(
+        args.source_pdf_dir,
+        args.output_dir,
+        args.report,
+        engine=args.engine,
+        engine_overrides=engine_overrides,
+        x_tolerance_overrides=x_tolerance_overrides,
+    )
 
 
 if __name__ == "__main__":

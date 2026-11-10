@@ -1,0 +1,10 @@
+{
+  "street_harassment": 0.45000000000000007,
+  "stalking": 0.3500000000000001,
+  "domestic_violence": 0.5000000000000001,
+  "workplace_harassment": 0.9000000000000002,
+  "dowry_harassment": 0.45000000000000007,
+  "cyber_abuse": 0.45000000000000007,
+  "sexual_violence": 0.3500000000000001,
+  "other": 0.40000000000000013
+}

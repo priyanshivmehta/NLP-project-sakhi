@@ -53,6 +53,22 @@ HINGLISH_MARKERS = {
     "ladka", "aadmi", "peecha", "peeche", "dhamki", "paise", "sasural", "behen", "dost", "bola",
     "bol", "tha", "thi", "hu", "hoon", "ne", "se", "ko", "ka", "ki", "ke", "mat", "kal", "aaj",
 }
+DEFAULT_RETRIEVER = "bm25_keywords"
+DEFAULT_RETRIEVAL_MIN_SCORE = 0.0
+
+
+def retriever_name() -> str:
+    return os.environ.get("SAKHI_RETRIEVER", DEFAULT_RETRIEVER)
+
+
+def retrieval_min_score() -> float:
+    value = os.environ.get(
+        "SAKHI_RETRIEVAL_MIN_SCORE", str(DEFAULT_RETRIEVAL_MIN_SCORE)
+    )
+    try:
+        return float(value)
+    except ValueError as exc:
+        raise ValueError("SAKHI_RETRIEVAL_MIN_SCORE must be a number.") from exc
 
 
 def models_dir() -> Path:
@@ -116,7 +132,12 @@ def _retrieve(text: str, k: int) -> tuple[list[dict[str, Any]], str]:
         if error.name == "sakhi.src.retrieval":
             return [], "not connected"
         raise
-    return list(module.retrieve(text, k=k)), "connected"
+    if not text.strip():
+        return [], "connected (no matching provision was found)"
+    results = list(module.retrieve(text, k=k, retriever=retriever_name()))
+    if not results or float(results[0].get("score", 0.0)) < retrieval_min_score():
+        return [], "connected (no matching provision was found)"
+    return results[:3], f"connected ({retriever_name()})"
 
 
 def analyze(text: str, top_k_provisions: int = 3) -> dict[str, Any]:

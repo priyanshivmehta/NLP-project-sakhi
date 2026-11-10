@@ -1,0 +1,374 @@
+{
+  "result_label": "val",
+  "metrics_csv": "C:\\Users\\PRIYANSHI MEHTA\\OneDrive\\NLP\\Project\\sakhi\\reports\\results_embedding\\val_metrics.csv",
+  "rows": [
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "immediate_danger",
+      "precision": 0.09090909090909091,
+      "recall": 0.2,
+      "f1": 0.125,
+      "support": 5,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "urgent",
+      "precision": 0.4186046511627907,
+      "recall": 0.6923076923076923,
+      "f1": 0.5217391304347826,
+      "support": 26,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "non_urgent",
+      "precision": 0.8461538461538461,
+      "recall": 0.5,
+      "f1": 0.6285714285714286,
+      "support": 44,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_class",
+      "label": "info_seeking",
+      "precision": 0.8333333333333334,
+      "recall": 0.7446808510638298,
+      "f1": 0.7865168539325843,
+      "support": 47,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "macro",
+      "label": "macro_avg",
+      "f1": 0.5154568532346989,
+      "support": 122,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "street_harassment",
+      "precision": 0.5625,
+      "recall": 0.5294117647058824,
+      "f1": 0.5454545454545454,
+      "support": 17,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "stalking",
+      "precision": 0.26666666666666666,
+      "recall": 0.6153846153846154,
+      "f1": 0.37209302325581395,
+      "support": 13,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "domestic_violence",
+      "precision": 0.7307692307692307,
+      "recall": 0.7916666666666666,
+      "f1": 0.76,
+      "support": 24,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "workplace_harassment",
+      "precision": 0.9411764705882353,
+      "recall": 0.7272727272727273,
+      "f1": 0.8205128205128205,
+      "support": 22,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "dowry_harassment",
+      "precision": 0.4166666666666667,
+      "recall": 0.625,
+      "f1": 0.5,
+      "support": 16,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "cyber_abuse",
+      "precision": 0.7894736842105263,
+      "recall": 0.6521739130434783,
+      "f1": 0.7142857142857143,
+      "support": 23,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "sexual_violence",
+      "precision": 0.5,
+      "recall": 0.42857142857142855,
+      "f1": 0.46153846153846156,
+      "support": 7,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_label",
+      "label": "other",
+      "precision": 0.3,
+      "recall": 0.5,
+      "f1": 0.375,
+      "support": 18,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "macro",
+      "label": "macro_avg",
+      "f1": 0.5686105706309195,
+      "support": 140,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "micro",
+      "label": "micro_avg",
+      "f1": 0.577922077922078,
+      "support": 140,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "subset_accuracy",
+      "label": "subset_accuracy",
+      "f1": 0.3360655737704918,
+      "support": 122,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_language",
+      "label": "en",
+      "f1": 0.4,
+      "support": 20,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:street_harassment",
+      "f1": 0.0,
+      "support": 1,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:stalking",
+      "f1": 0.4,
+      "support": 3,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:domestic_violence",
+      "f1": 1.0,
+      "support": 5,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:workplace_harassment",
+      "f1": 1.0,
+      "support": 2,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:dowry_harassment",
+      "f1": 0.0,
+      "support": 0,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:cyber_abuse",
+      "f1": 0.6666666666666666,
+      "support": 3,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:sexual_violence",
+      "f1": 0.0,
+      "support": 1,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "en:other",
+      "f1": 0.25,
+      "support": 5,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_language",
+      "label": "hi",
+      "f1": 0.6123737373737373,
+      "support": 41,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:street_harassment",
+      "f1": 0.5714285714285714,
+      "support": 8,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:stalking",
+      "f1": 0.4444444444444444,
+      "support": 4,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:domestic_violence",
+      "f1": 0.8,
+      "support": 7,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:workplace_harassment",
+      "f1": 0.9411764705882353,
+      "support": 8,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:dowry_harassment",
+      "f1": 0.8235294117647058,
+      "support": 9,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:cyber_abuse",
+      "f1": 0.8333333333333334,
+      "support": 6,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:sexual_violence",
+      "f1": 0.6666666666666666,
+      "support": 2,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hi:other",
+      "f1": 0.0,
+      "support": 4,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "urgency",
+      "metric_scope": "per_language",
+      "label": "hinglish",
+      "f1": 0.4127915095657031,
+      "support": 61,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:street_harassment",
+      "f1": 0.5555555555555556,
+      "support": 8,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:stalking",
+      "f1": 0.3448275862068966,
+      "support": 6,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:domestic_violence",
+      "f1": 0.64,
+      "support": 12,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:workplace_harassment",
+      "f1": 0.6666666666666666,
+      "support": 12,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:dowry_harassment",
+      "f1": 0.35294117647058826,
+      "support": 7,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:cyber_abuse",
+      "f1": 0.6666666666666666,
+      "support": 14,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:sexual_violence",
+      "f1": 0.4,
+      "support": 4,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    },
+    {
+      "task": "situation",
+      "metric_scope": "per_language_label",
+      "label": "hinglish:other",
+      "f1": 0.5161290322580645,
+      "support": 9,
+      "data_quality": "SYNTHETIC BENCHMARK (AI-generated, human-verified), NOT REAL-WORLD ACCURACY"
+    }
+  ]
+}

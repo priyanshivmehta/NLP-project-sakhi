@@ -3,6 +3,7 @@
 from pathlib import Path
 
 from sakhi.src.pipeline import analyze
+from sakhi.src.pipeline import _retrieve
 from sakhi.src.safety_rules import evaluate_safety
 
 
@@ -50,8 +51,42 @@ def test_pipeline_safety_override_does_not_load_model(monkeypatch) -> None:
     assert result["provisions"] == []
 
 
+def test_pipeline_retrieval_uses_configured_retriever_and_score_threshold(monkeypatch) -> None:
+    seen = {}
+
+    class FakeRetrieval:
+        def retrieve(self, text, k, retriever):
+            seen.update(text=text, k=k, retriever=retriever)
+            return [
+                {
+                    "chunk_id": "FAKE-1",
+                    "act": "FAKE LAW TEXT",
+                    "section_no": "1",
+                    "text": "1. FAKE LAW TEXT",
+                    "score": 0.2,
+                }
+            ]
+
+    monkeypatch.setattr("sakhi.src.pipeline.importlib.import_module", lambda _: FakeRetrieval())
+    monkeypatch.setenv("SAKHI_RETRIEVER", "bm25_keywords")
+    monkeypatch.setenv("SAKHI_RETRIEVAL_MIN_SCORE", "0.5")
+    provisions, state = _retrieve("fake query", 3)
+    assert provisions == []
+    assert "no matching provision" in state
+    assert seen == {"text": "fake query", "k": 3, "retriever": "bm25_keywords"}
+
+
 def test_app_does_not_explicitly_store_message() -> None:
     app_path = Path(__file__).parents[1] / "app" / "streamlit_app.py"
     source = app_path.read_text(encoding="utf-8")
     assert "st.session_state" not in source
     assert 'key="msg_' not in source
+
+
+def test_app_backend_returns_analyzer_when_models_are_available(monkeypatch) -> None:
+    app_path = Path(__file__).parents[1] / "app" / "streamlit_app.py"
+    lines = app_path.read_text(encoding="utf-8").splitlines()
+    return_line = next(line for line in lines if "return getattr(mod, \"analyze\")" in line)
+    if_line = next(line for line in lines if "if not mod.models_available():" in line)
+    assert len(return_line) - len(return_line.lstrip()) == 4
+    assert len(if_line) - len(if_line.lstrip()) == 4

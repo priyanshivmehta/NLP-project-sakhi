@@ -107,7 +107,7 @@ def get_backend():
                 "Configure SAKHI_MODELS_DIR before starting the app."
             )
         return None, "No trained model configured"
-        return getattr(mod, "analyze"), "sakhi.src.pipeline.analyze (baseline TF-IDF + LR)"
+    return getattr(mod, "analyze"), "sakhi.src.pipeline.analyze (baseline TF-IDF + LR)"
 
 
 analyze, BACKEND_NAME = get_backend()
@@ -232,12 +232,16 @@ if submitted:
             st.info("Legal explanations are skipped while crisis support is the priority.")
         elif provisions:
             for p in provisions:
-                st.markdown(PROVISION_TEMPLATE.format(act=p["act"], section=p["section"]))
+                st.markdown(
+                    PROVISION_TEMPLATE.format(
+                        act=p["act"], section=p.get("section_no", p.get("section", ""))
+                    )
+                )
                 with st.expander("Official text"):
                     st.write(p["text"])
                     st.caption("Source: official legal text. Verify against India Code.")
         else:
-            st.info("No legal text retrieved. The retrieval module is not connected yet, or nothing matched.")
+            st.info("No matching provision was found.")
 
         # 4) Routing.
         st.subheader("Where to go")

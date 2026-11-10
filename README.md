@@ -56,6 +56,10 @@ streamlit run sakhi/app/streamlit_app.py
 
 Set `SAKHI_DEPLOYED=true` in deployed environments. The app refuses to start
 without a trained model in that mode; it never substitutes a keyword demo.
+Legal retrieval in the app defaults to `bm25_keywords`. Set
+`SAKHI_RETRIEVER` to choose another supported retriever and
+`SAKHI_RETRIEVAL_MIN_SCORE` to configure the minimum accepted retrieval score.
+Empty input and results below that threshold show no matching provision.
 
 The application and scripts will be documented here as they are implemented.
 Run tests from the repository root with:
@@ -121,6 +125,28 @@ The smoke evaluation uses only a clearly labeled `FAKE LAW TEXT` fixture and
 must not be reported as legal-retrieval performance. The IPC-to-BNS mapping
 template is intentionally header-only until it is populated and verified by
 the project team.
+
+Manual legal overrides may be placed in
+`sakhi/data/legal/manual_overrides/`. A file named
+`<ACT>_<section>.txt` maps to the chunk ID `<ACT>-<section>`; for example,
+`DPA-1961_S4.txt` maps to `DPA-1961-S4`, `BNS_78.txt` maps to `BNS-78`,
+and `PWDVA-2005_S12.txt` maps to `PWDVA-2005-S12`. Override text must begin
+with its own section number and is copied verbatim. Each applied override is
+logged during ingestion.
+
+Retrieval strategies can be selected with `--retriever`:
+
+```powershell
+python -m sakhi.src.eval_retrieval --retriever all
+python -m sakhi.src.eval_retrieval --retriever bm25_keywords
+```
+
+The `bm25_text_curated` retriever is the fair plain-BM25 baseline: it uses
+the same curated provision chunks as `bm25_keywords` but does not index the
+keyword aids. This isolates the gain from the keyword file.
+
+Keyword aids are search-only metadata. They are never returned or displayed
+as legal text; pipeline results display only the verbatim chunk text.
 
 Audit a dataset for duplicate text, repeated phrase patterns, and label leakage:
 

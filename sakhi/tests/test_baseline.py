@@ -9,6 +9,7 @@ import pytest
 
 from sakhi.src.evaluate import (
     _validate_evaluation_labels,
+    _write_clean_noisy_comparison,
     evaluate_frames,
     load_evaluation_data,
     run_smoke,
@@ -119,6 +120,40 @@ def test_test_csv_requires_final_test_flag(tmp_path: Path) -> None:
     test_path.write_text("final_model_input\ntext\n", encoding="utf-8")
     with pytest.raises(ValueError, match="requires the explicit --final-test"):
         load_evaluation_data(test_path)
+
+
+def test_clean_noisy_comparison_writes_side_by_side_metrics(tmp_path: Path) -> None:
+    clean = {
+        "metrics_csv": "clean.csv",
+        "rows": [
+            {
+                "task": "urgency",
+                "metric_scope": "per_class",
+                "label": "urgent",
+                "f1": 0.8,
+                "support": 2,
+            }
+        ],
+    }
+    noisy = {
+        "metrics_csv": "noisy.csv",
+        "rows": [
+            {
+                "task": "urgency",
+                "metric_scope": "per_class",
+                "label": "urgent",
+                "f1": 0.5,
+                "support": 2,
+            }
+        ],
+    }
+    csv_path, json_path = _write_clean_noisy_comparison(
+        clean, noisy, tmp_path, "test"
+    )
+    result = pd.read_csv(csv_path)
+    assert result.loc[0, "clean_f1"] == 0.8
+    assert result.loc[0, "noisy_f1"] == 0.5
+    assert json_path.exists()
 
 
 class _FakeEncoder:

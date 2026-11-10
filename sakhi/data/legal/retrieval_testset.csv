@@ -1,0 +1,52 @@
+query,language,expected_chunk_ids
+ek ladka roz mera peecha karta hai college se ghar tak,hinglish,BNS-78
+someone keeps following me and messaging me even after I said no,en,BNS-78
+एक आदमी बार बार मेरा पीछा कर रहा है और मना करने पर भी फोन करता है,hi,BNS-78
+my ex tracks my online activity and keeps contacting me,en,BNS-78
+wo mere social media ki nigrani karta hai aur baar baar message karta hai,hinglish,BNS-78
+my boss keeps asking for sexual favours,en,BNS-75
+koi mujhe zabardasti porn dikha raha hai,hinglish,BNS-75
+मेरे सहकर्मी ने मुझसे यौन संबंध की मांग की,hi,BNS-75
+someone is sending me sexual comments and unwelcome advances,en,BNS-75
+a man grabbed me in the crowd and touched me inappropriately,en,BNS-74
+bus me kisi ne galat tarike se chua,hinglish,BNS-74
+भीड़ में एक आदमी ने मुझे गलत तरीके से छुआ,hi,BNS-74
+they tried to pull off her clothes to humiliate her,en,BNS-76
+usne mere kapde utarne ki koshish ki,hinglish,BNS-76
+someone secretly recorded me in the changing room,en,BNS-77
+mere private video bina permission ke banaye gaye,hinglish,BNS-77
+किसी ने मेरी निजी तस्वीरें बिना इजाज़त खींचकर फैला दीं,hi,BNS-77
+a man made rude gestures and comments at me on the street,en,BNS-79
+raste me ek ladka gande comment karta hai aur ishare karta hai,hinglish,BNS-79
+सड़क पर एक लड़के ने मुझ पर भद्दे कमेंट किए और इशारे किए,hi,BNS-79
+I was forced into a sexual act without my consent,en,BNS-63
+kisi ne meri marzi ke bina mere saath zabardasti ki,hinglish,BNS-63
+what is the punishment for rape,en,BNS-64
+बलात्कार की सज़ा क्या है,hi,BNS-64
+my sister died within seven years of marriage after dowry harassment,en,BNS-80
+shaadi ke 5 saal baad dahej ke taano ke baad meri bahan ki maut ho gayi,hinglish,BNS-80
+husband and in-laws keep harassing me for more dowry,en,DPA-1961-S3
+pati aur sasural wale mujhe pareshan karte hain aur maarte hain,hinglish,BNS-85
+पति और ससुराल वाले मुझे दहेज के लिए परेशान करते हैं,hi,BNS-85
+what counts as cruelty by a husband,en,BNS-86
+cruelty ka matlab kya hota hai pati ke case me,hinglish,BNS-86
+he threatens to harm me and my family if I tell anyone,en,BNS-351
+wo mujhe dhamki deta hai ki jaan se maar dunga,hinglish,BNS-351
+वह मुझे जान से मारने की धमकी देता है,hi,BNS-351
+someone shared my private photos online without my consent,en,IT-66E
+mere private photos bina permission ke internet par daal diye,hinglish,IT-66E
+he posted obscene pictures of me on a website,en,IT-67
+someone is using my identity on social media,en,IT-66C
+my husband beats me and I want a protection order,en,PWDVA-2005-S18
+pati marta hai kya mujhe ghar se nikala ja sakta hai,hinglish,PWDVA-2005-S19
+how can a woman apply to a magistrate under the domestic violence law,en,PWDVA-2005-S12
+घरेलू हिंसा होने पर महिला मजिस्ट्रेट के पास कैसे आवेदन करे,hi,PWDVA-2005-S12
+can I get monetary relief from my husband for expenses,en,PWDVA-2005-S20
+what is domestic violence according to the law,en,PWDVA-2005-S3
+how to file a complaint of sexual harassment at the workplace,en,POSH-2013-S9
+office me internal committee kaise banti hai,hinglish,POSH-2013-S4
+कार्यस्थल पर यौन उत्पीड़न की शिकायत कहाँ करें,hi,POSH-2013-S9
+who conducts the inquiry into a workplace harassment complaint,en,POSH-2013-S11
+penalty for demanding dowry,en,DPA-1961-S4
+dahej maangne par kya saza hai,hinglish,DPA-1961-S4
+dahej dena ya lena kanoonan jurm hai kya,hinglish,DPA-1961-S3

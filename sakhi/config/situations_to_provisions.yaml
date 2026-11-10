@@ -1,0 +1,8 @@
+street_harassment: [BNS-74, BNS-75, BNS-76, BNS-79]
+stalking: [BNS-78, BNS-351]
+domestic_violence: [PWDVA-2005-S3, PWDVA-2005-S12, PWDVA-2005-S18, PWDVA-2005-S19, PWDVA-2005-S20, PWDVA-2005-S21, PWDVA-2005-S22, BNS-85, BNS-86, BNS-351]
+workplace_harassment: [POSH-2013-S2, POSH-2013-S4, POSH-2013-S9, POSH-2013-S11, BNS-75]
+dowry_harassment: [DPA-1961-S3, DPA-1961-S4, BNS-80, BNS-85, BNS-86, PWDVA-2005-S3]
+cyber_abuse: [IT-66C, IT-66D, IT-66E, IT-67, IT-67A, BNS-77, BNS-351]
+sexual_violence: [BNS-63, BNS-64, BNS-74, BNS-75, BNS-76, BNS-77]
+other: []
