@@ -1,7 +1,9 @@
 """Tests for pre-model safety overrides and privacy-sensitive app behavior."""
 
+import json
 from pathlib import Path
 
+from sakhi.src import pipeline
 from sakhi.src.pipeline import analyze
 from sakhi.src.pipeline import _retrieve
 from sakhi.src.safety_rules import evaluate_safety
@@ -85,8 +87,60 @@ def test_app_does_not_explicitly_store_message() -> None:
 
 def test_app_backend_returns_analyzer_when_models_are_available(monkeypatch) -> None:
     app_path = Path(__file__).parents[1] / "app" / "streamlit_app.py"
-    lines = app_path.read_text(encoding="utf-8").splitlines()
-    return_line = next(line for line in lines if "return getattr(mod, \"analyze\")" in line)
+    source = app_path.read_text(encoding="utf-8")
+    lines = source.splitlines()
     if_line = next(line for line in lines if "if not mod.models_available():" in line)
-    assert len(return_line) - len(return_line.lstrip()) == 4
+    assert 'return getattr(mod, "analyze"), f"sakhi.src.pipeline.analyze ({mod.model_family()})"' in source
     assert len(if_line) - len(if_line.lstrip()) == 4
+
+
+def test_pipeline_uses_available_embedding_model_for_queries(tmp_path, monkeypatch) -> None:
+    model_dir = tmp_path / "models_embedding"
+    model_dir.mkdir()
+    metadata = {
+        "model_family": "embedding",
+        "model_name": "fake-model",
+        "situation_labels": ["other", "stalking"],
+    }
+    (model_dir / "model_metadata.json").write_text(json.dumps(metadata))
+    (model_dir / "situation_thresholds.json").write_text('{"other": 0.5, "stalking": 0.5}')
+    for name in ("urgency_model.joblib", "situation_model.joblib"):
+        (model_dir / name).touch()
+
+    baseline_dir = tmp_path / "models"
+    monkeypatch.setattr(pipeline, "MODELS_DIR", baseline_dir)
+    monkeypatch.setattr(pipeline, "EMBEDDING_MODELS_DIR", model_dir)
+    monkeypatch.delenv("SAKHI_MODELS_DIR", raising=False)
+    assert pipeline.models_dir() == model_dir
+    assert pipeline.models_available()
+
+    class FakeEncoder:
+        inputs = None
+
+        def encode(self, texts, show_progress_bar=False):
+            self.inputs = texts
+            return [[0.1, 0.2]]
+
+    class FakeUrgencyModel:
+        classes_ = ["urgent", "non_urgent"]
+
+        def predict_proba(self, features):
+            return [[0.8, 0.2]]
+
+    class FakeSituationModel:
+        def predict_proba(self, features):
+            return [[0.9, 0.1]]
+
+    encoder = FakeEncoder()
+    loaded = {"urgency_model.joblib": FakeUrgencyModel(),
+              "situation_model.joblib": FakeSituationModel()}
+    monkeypatch.setattr(pipeline.joblib, "load", lambda path: loaded[Path(path).name])
+    monkeypatch.setattr(pipeline, "_load_encoder", lambda name: encoder)
+    monkeypatch.setattr(pipeline, "_retrieve", lambda text, k: ([], "not connected"))
+    pipeline.load_artifacts.cache_clear()
+
+    result = pipeline.analyze("Can you help me understand my options?")
+
+    assert encoder.inputs and len(encoder.inputs) == 1
+    assert result["urgency"]["label"] == "urgent"
+    assert result["situations"][0]["label"] == "other"

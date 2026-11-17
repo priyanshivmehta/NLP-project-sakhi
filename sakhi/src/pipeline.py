@@ -41,6 +41,8 @@ from sakhi.src.train_baseline import (
     BaselineArtifacts,
     _model_text,
 )
+from sakhi.src.train_embedding import EmbeddingArtifacts, MODELS_DIR as EMBEDDING_MODELS_DIR
+from sakhi.src.train_embedding import _load_encoder
 
 DEVANAGARI_RE = re.compile(r"[\u0900-\u097F]")
 LATIN_RE = re.compile(r"[A-Za-z]")
@@ -55,6 +57,26 @@ HINGLISH_MARKERS = {
 }
 DEFAULT_RETRIEVER = "bm25_keywords"
 DEFAULT_RETRIEVAL_MIN_SCORE = 0.0
+COMMON_MODEL_FILES = (
+    "urgency_model.joblib",
+    "situation_model.joblib",
+    "situation_thresholds.json",
+    "model_metadata.json",
+)
+
+
+def _model_family(folder: Path) -> str:
+    metadata = json.loads((folder / "model_metadata.json").read_text(encoding="utf-8"))
+    return metadata.get("model_family", "baseline")
+
+
+def _models_available_in(folder: Path) -> bool:
+    if not all((folder / name).is_file() for name in COMMON_MODEL_FILES):
+        return False
+    family = _model_family(folder)
+    if family == "baseline":
+        return (folder / "tfidf_features.joblib").is_file()
+    return family == "embedding"
 
 
 def retriever_name() -> str:
@@ -72,37 +94,57 @@ def retrieval_min_score() -> float:
 
 
 def models_dir() -> Path:
-    return Path(os.environ.get("SAKHI_MODELS_DIR", MODELS_DIR))
+    configured = os.environ.get("SAKHI_MODELS_DIR")
+    if configured:
+        return Path(configured)
+    if _models_available_in(MODELS_DIR):
+        return MODELS_DIR
+    if _models_available_in(EMBEDDING_MODELS_DIR):
+        return EMBEDDING_MODELS_DIR
+    return MODELS_DIR
 
 
 def models_available() -> bool:
-    needed = ("tfidf_features.joblib", "urgency_model.joblib", "situation_model.joblib",
-              "situation_thresholds.json", "model_metadata.json")
-    return all((models_dir() / name).is_file() for name in needed)
+    return _models_available_in(models_dir())
+
+
+def model_family() -> str:
+    return _model_family(models_dir())
 
 
 @lru_cache(maxsize=2)
-def load_artifacts(directory: str | None = None) -> BaselineArtifacts:
+def load_artifacts(directory: str | None = None) -> BaselineArtifacts | EmbeddingArtifacts:
     folder = Path(directory) if directory else models_dir()
-    needed = (
-        "tfidf_features.joblib",
-        "urgency_model.joblib",
-        "situation_model.joblib",
-        "situation_thresholds.json",
-        "model_metadata.json",
-    )
-    if not all((folder / name).is_file() for name in needed):
+    if not _models_available_in(folder):
         raise FileNotFoundError(
-            f"Trained models not found in {folder}. Run: python -m sakhi.src.train_baseline"
+            f"Supported trained model artifacts not found in {folder}. "
+            "Set SAKHI_MODELS_DIR to a baseline or embedding model directory."
         )
+    family = _model_family(folder)
+    metadata = json.loads((folder / "model_metadata.json").read_text(encoding="utf-8"))
+    urgency_model = joblib.load(folder / "urgency_model.joblib")
+    situation_model = joblib.load(folder / "situation_model.joblib")
+    situation_labels = metadata["situation_labels"]
+    thresholds = json.loads((folder / "situation_thresholds.json").read_text(encoding="utf-8"))
+
+    if family == "embedding":
+        model_name = metadata.get("model_name")
+        if not model_name:
+            raise ValueError(f"Embedding model metadata in {folder} is missing model_name.")
+        return EmbeddingArtifacts(
+            encoder=_load_encoder(model_name),
+            urgency_model=urgency_model,
+            situation_model=situation_model,
+            situation_labels=situation_labels,
+            thresholds=thresholds,
+        )
+
     return BaselineArtifacts(
         vectorizer=joblib.load(folder / "tfidf_features.joblib"),
-        urgency_model=joblib.load(folder / "urgency_model.joblib"),
-        situation_model=joblib.load(folder / "situation_model.joblib"),
-        situation_labels=json.loads((folder / "model_metadata.json").read_text(encoding="utf-8"))[
-            "situation_labels"
-        ],
-        thresholds=json.loads((folder / "situation_thresholds.json").read_text(encoding="utf-8")),
+        urgency_model=urgency_model,
+        situation_model=situation_model,
+        situation_labels=situation_labels,
+        thresholds=thresholds,
     )
 
 
@@ -159,7 +201,10 @@ def analyze(text: str, top_k_provisions: int = 3) -> dict[str, Any]:
     artifacts = load_artifacts()
     language = detect_language(text)
     model_input = preprocess_text(text, language, _spelling_variants())["final_model_input"]
-    features = artifacts.vectorizer.transform([model_input])
+    if isinstance(artifacts, EmbeddingArtifacts):
+        features = np.asarray(artifacts.encoder.encode([model_input], show_progress_bar=False))
+    else:
+        features = artifacts.vectorizer.transform([model_input])
 
     urgency_probs = artifacts.urgency_model.predict_proba(features)[0]
     urgency = {str(c): float(p) for c, p in zip(artifacts.urgency_model.classes_, urgency_probs)}

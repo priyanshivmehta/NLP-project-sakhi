@@ -46,13 +46,19 @@ python -m pip install -r requirements.txt
 Training code is designed to run locally on small samples and in Google Colab
 or Kaggle for the full experiments. No paid API or hosted LLM API is required.
 
-The app and inference pipeline load trained artifacts from `sakhi/models/` by
-default. Set `SAKHI_MODELS_DIR` to use another trained-artifact directory:
+The app and inference pipeline prefer baseline artifacts in `sakhi/models/`.
+If that directory is not populated, they use the trained embedding artifacts
+in `sakhi/models_embedding/` when available. Set `SAKHI_MODELS_DIR` to choose
+a trained-artifact directory explicitly:
 
 ```powershell
 $env:SAKHI_MODELS_DIR = "C:\path\to\trained\models"
 streamlit run sakhi/app/streamlit_app.py
 ```
+
+Embedding-model inference requires the optional dependencies in
+`requirements-train.txt` (including `sentence-transformers`). Install them
+with `python -m pip install -r requirements-train.txt`.
 
 Set `SAKHI_DEPLOYED=true` in deployed environments. The app refuses to start
 without a trained model in that mode; it never substitutes a keyword demo.

@@ -44,7 +44,7 @@ def _load_encoder(model_name: str) -> Any:
         from sentence_transformers import SentenceTransformer
     except ImportError as exc:
         raise RuntimeError(
-            "sentence-transformers is required for embedding training/evaluation. "
+            "sentence-transformers is required for embedding training/inference. "
             "Install requirements-train.txt."
         ) from exc
     return SentenceTransformer(model_name)

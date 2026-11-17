@@ -107,7 +107,7 @@ def get_backend():
                 "Configure SAKHI_MODELS_DIR before starting the app."
             )
         return None, "No trained model configured"
-    return getattr(mod, "analyze"), "sakhi.src.pipeline.analyze (baseline TF-IDF + LR)"
+    return getattr(mod, "analyze"), f"sakhi.src.pipeline.analyze ({mod.model_family()})"
 
 
 analyze, BACKEND_NAME = get_backend()

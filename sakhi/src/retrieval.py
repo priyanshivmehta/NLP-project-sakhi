@@ -304,9 +304,11 @@ def search(
     return load_retriever(str(chunks_path), retriever).search(query, k)
 
 
-def retrieve(text: str, k: int = 3) -> list[dict[str, Any]]:
-    """Pipeline-compatible default retrieval wrapper."""
-    return search(text, k, retriever="bm25_text")
+def retrieve(
+    text: str, k: int = 3, retriever: str = "bm25_text"
+) -> list[dict[str, Any]]:
+    """Pipeline-compatible retrieval wrapper."""
+    return search(text, k, retriever=retriever)
 
 
 def main() -> None:

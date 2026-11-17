@@ -13,6 +13,7 @@ from sakhi.src.retrieval import (
     BM25KeywordRetriever,
     BM25Retriever,
     BM25TextCuratedRetriever,
+    retrieve,
     search,
 )
 
@@ -238,6 +239,19 @@ def test_empty_configured_corpus_is_safe(tmp_path: Path) -> None:
         columns=["chunk_id", "act", "section_no", "section_title", "text", "language", "source_file"]
     ).to_csv(path, index=False)
     assert search("anything", chunks_path=path) == []
+
+
+def test_retrieve_forwards_selected_strategy(monkeypatch) -> None:
+    seen = {}
+
+    def fake_search(query, k=5, chunks_path=None, retriever="bm25_text"):
+        seen.update(query=query, k=k, retriever=retriever)
+        return []
+
+    monkeypatch.setattr("sakhi.src.retrieval.search", fake_search)
+
+    assert retrieve("example", k=2, retriever="bm25_keywords") == []
+    assert seen == {"query": "example", "k": 2, "retriever": "bm25_keywords"}
 
 
 def _fake_pdf(texts: list[str]) -> bytes:
